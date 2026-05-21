@@ -1,0 +1,16 @@
+CHANGELOG.md
+  h_5b3f31968f5853 13
+linearizer/linearizer.rs
+  h_5b3f31968f5853 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "46a993a92e5a0d537ed6674d8626c6dc37e9e2cd",
+  "prompts": {},
+  "humans": {
+    "h_5b3f31968f5853": {
+      "author": "Steve King <12994437+steveking-gh@users.noreply.github.com>"
+    }
+  }
+}
