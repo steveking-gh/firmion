@@ -31,7 +31,7 @@ use std::{
     path::Path,
     path::PathBuf,
 };
-use symtable::SymbolTable;
+use ir::symtable::SymbolTable;
 
 pub struct FileInfo {
     pub path: String,

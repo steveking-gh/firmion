@@ -13,7 +13,7 @@
 #![doc(hidden)]
 
 use diags::{Diags, SourceSpan};
-use ir::ParameterValue;
+use crate::ParameterValue;
 use std::collections::HashMap;
 
 /// One entry in the symbol table.

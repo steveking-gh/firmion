@@ -23,7 +23,7 @@ use tracing::{debug, trace};
 use ast::{Ast, LexToken};
 use astdb::AstDb;
 use ir::{ConstBuiltins, ObjProps, ParameterValue, RegionProps, strip_kmg};
-use symtable::SymbolTable;
+use ir::symtable::SymbolTable;
 
 // ── Internal error type for const arithmetic ─────────────────────────────────
 

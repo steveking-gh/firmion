@@ -52,7 +52,7 @@ members = [
     "extensions/std/md5",
     "extensions/std/sha256",
     "extensions/std/xor",
-    "symtable",
+
     "validation_phase",
 ]
 
@@ -98,7 +98,7 @@ std_esp_checksum = { package = "firmion-std-esp-checksum", path = "extensions/st
 std_md5 = { package = "firmion-std-md5", path = "extensions/std/md5", version = "0.7.0" }
 std_sha256 = { package = "firmion-std-sha256", path = "extensions/std/sha256", version = "0.7.0" }
 std_xor = { package = "firmion-std-xor", path = "extensions/std/xor", version = "0.7.0" }
-symtable = { package = "firmion-symtable", path = "symtable", version = "0.7.0" }
+
 validation_phase = { package = "firmion-validation-phase", path = "validation_phase", version = "0.7.0" }
 
 [features]

@@ -24,7 +24,7 @@ indextree = "4.6.1"
 ir = { workspace = true }
 linearizer = { workspace = true }
 parse_int = "0.9.0"
-symtable = { workspace = true }
+
 tracing = "0.1.44"
 
 [lints]

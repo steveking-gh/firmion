@@ -18,7 +18,7 @@ use tracing::debug;
 
 use ast::{Ast, LexToken, TokenInfo};
 use ir::{DataType, IRKind};
-use symtable::SymbolTable;
+use ir::symtable::SymbolTable;
 
 /// An operand in the linearized IR. Two design choices greatly simplify lifetime
 /// management:

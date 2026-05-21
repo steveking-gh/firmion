@@ -24,7 +24,7 @@ use ast::{Ast, LexToken, is_reserved_identifier};
 use astdb::AstDb;
 use ir::{IRKind, ObjProps};
 use std::collections::{HashMap, HashSet};
-use symtable::SymbolTable;
+use ir::symtable::SymbolTable;
 
 use linearizer::{LinIR, LinOperand, Linearizer, tok_to_irkind};
 

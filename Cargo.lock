@@ -279,7 +279,6 @@ dependencies = [
  "firmion-diags",
  "firmion-ir",
  "firmion-linearizer",
- "firmion-symtable",
  "indextree",
  "parse_int",
  "tracing",
@@ -353,7 +352,6 @@ dependencies = [
  "firmion-layoutdb",
  "firmion-linearizer",
  "firmion-objfile",
- "firmion-symtable",
  "indextree",
  "parse_int",
  "tracing",
@@ -394,7 +392,6 @@ dependencies = [
  "firmion-diags",
  "firmion-ir",
  "firmion-linearizer",
- "firmion-symtable",
  "indextree",
  "tracing",
 ]
@@ -406,7 +403,6 @@ dependencies = [
  "firmion-ast",
  "firmion-diags",
  "firmion-ir",
- "firmion-symtable",
  "indextree",
  "tracing",
 ]
@@ -542,14 +538,6 @@ dependencies = [
  "firmion-extension",
  "firmion-extension-registry",
  "predicates",
-]
-
-[[package]]
-name = "firmion-symtable"
-version = "0.7.0"
-dependencies = [
- "firmion-diags",
- "firmion-ir",
 ]
 
 [[package]]

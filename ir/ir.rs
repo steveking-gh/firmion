@@ -16,6 +16,8 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
+pub mod symtable;
+
 use diags::Diags;
 use diags::SourceSpan;
 use parse_int::parse;
