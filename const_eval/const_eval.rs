@@ -11,7 +11,7 @@
 #![doc(hidden)]
 
 use anyhow::bail;
-use depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
+use diags::depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
 use diags::{Diags, SourceSpan};
 use indextree::NodeId;
 use parse_int::parse;

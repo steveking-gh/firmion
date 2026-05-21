@@ -17,7 +17,7 @@ anyhow = "1.0.34"
 ast = { workspace = true }
 astdb = { workspace = true }
 
-depth_guard = { workspace = true }
+
 diags = { workspace = true }
 indextree = "4.3.1"
 ir = { workspace = true }

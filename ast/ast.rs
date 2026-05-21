@@ -23,7 +23,7 @@ use std::fs::File;
 use std::io::prelude::*;
 
 #[allow(unused_imports)]
-use depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
+use diags::depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
 use tracing::{Level, debug, enabled, trace};
 
 /// All tokens in firmion.

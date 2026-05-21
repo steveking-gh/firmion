@@ -13,6 +13,8 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
+pub mod depth_guard;
+
 use ariadne::{CharSet, Color, Config, Label, Report, ReportBuilder, ReportKind, sources};
 use std::io::IsTerminal;
 use std::ops::Range;

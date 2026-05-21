@@ -10,6 +10,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 - README: Added ESP32-S3 case study.
 - INTERNAL: Added examples/esp32 with ESP32 image experiment code
+- INTERNAL: Consolidated depth_guard library with diags library
 
 ## [0.7.0] - 2026-05-05 -
 

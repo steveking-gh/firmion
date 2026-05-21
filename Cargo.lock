@@ -253,7 +253,6 @@ name = "firmion-ast"
 version = "0.7.0"
 dependencies = [
  "anyhow",
- "firmion-depth-guard",
  "firmion-diags",
  "indextree",
  "tracing",
@@ -265,7 +264,6 @@ version = "0.7.0"
 dependencies = [
  "anyhow",
  "firmion-ast",
- "firmion-depth-guard",
  "firmion-diags",
  "indextree",
  "tracing",
@@ -278,7 +276,6 @@ dependencies = [
  "anyhow",
  "firmion-ast",
  "firmion-astdb",
- "firmion-depth-guard",
  "firmion-diags",
  "firmion-ir",
  "firmion-linearizer",
@@ -287,10 +284,6 @@ dependencies = [
  "parse_int",
  "tracing",
 ]
-
-[[package]]
-name = "firmion-depth-guard"
-version = "0.7.0"
 
 [[package]]
 name = "firmion-diags"
@@ -398,7 +391,6 @@ dependencies = [
  "anyhow",
  "firmion-ast",
  "firmion-astdb",
- "firmion-depth-guard",
  "firmion-diags",
  "firmion-ir",
  "firmion-linearizer",
@@ -412,7 +404,6 @@ name = "firmion-linearizer"
 version = "0.7.0"
 dependencies = [
  "firmion-ast",
- "firmion-depth-guard",
  "firmion-diags",
  "firmion-ir",
  "firmion-symtable",

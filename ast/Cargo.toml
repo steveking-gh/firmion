@@ -15,7 +15,7 @@ path = "ast.rs"
 [dependencies]
 anyhow = "1.0.34"
 
-depth_guard = { workspace = true }
+
 diags = { workspace = true }
 indextree = "4.3.1"
 tracing = "0.1.44"

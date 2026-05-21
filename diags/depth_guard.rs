@@ -24,7 +24,7 @@ thread_local! {
 /// # Example
 ///
 /// ```
-/// use firmion_depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
+/// use firmion_diags::depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
 ///
 /// fn parse_expr() -> bool {
 ///     let Some(_guard) = DepthGuard::enter(MAX_RECURSION_DEPTH) else {

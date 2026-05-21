@@ -8,7 +8,7 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
-use depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
+use diags::depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
 use diags::Diags;
 use diags::SourceSpan;
 use indextree::NodeId;
