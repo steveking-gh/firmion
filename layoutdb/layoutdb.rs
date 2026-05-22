@@ -21,7 +21,7 @@ use indextree::NodeId;
 use tracing::{debug, trace};
 
 use ast::{Ast, LexToken, is_reserved_identifier};
-use astdb::AstDb;
+use ast::astdb::AstDb;
 use ir::{IRKind, ObjProps};
 use std::collections::{HashMap, HashSet};
 use ir::symtable::SymbolTable;

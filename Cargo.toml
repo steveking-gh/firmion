@@ -26,7 +26,7 @@ exclude = [
 [workspace]
 members = [
     "ast",
-    "astdb",
+
     "const_eval",
 
     "diags",
@@ -72,7 +72,7 @@ unsafe_code = "forbid"
 # The prefix only exists to prevent name collisions on crates.io.
 [workspace.dependencies]
 ast = { package = "firmion-ast", path = "ast", version = "0.7.0" }
-astdb = { package = "firmion-astdb", path = "astdb", version = "0.7.0" }
+
 const_eval = { package = "firmion-const-eval", path = "const_eval", version = "0.7.0" }
 
 diags = { package = "firmion-diags", path = "diags", version = "0.7.0" }

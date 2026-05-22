@@ -21,7 +21,7 @@ use std::io::Write;
 
 // Local libraries
 use ast::Ast;
-use astdb::AstDb;
+use ast::astdb::AstDb;
 use diags::Diags;
 use exec_phase::ExecPhase;
 use extension_registry::{ExtensionRegistry, test_mocks::register_test_extensions};

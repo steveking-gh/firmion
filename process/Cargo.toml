@@ -24,7 +24,7 @@ anyhow = "1.0.34"
 
 # local dependencies
 ast = { workspace = true }
-astdb = { workspace = true }
+
 const_eval = { workspace = true }
 diags = { workspace = true }
 exec_phase = { workspace = true }

@@ -10,8 +10,9 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 - README: Added ESP32-S3 case study.
 - INTERNAL: Added examples/esp32 with ESP32 image experiment code
-- INTERNAL: moved depth_guard library to diags library
-- INTERNAL: moved symtable library to IR library
+- INTERNAL: moved depth_guard library as submodule of diags
+- INTERNAL: moved symtable library as submodule of ir
+- INTERNAL: moved astdb library as submodule of ast
 
 ## [0.7.0] - 2026-05-05 -
 

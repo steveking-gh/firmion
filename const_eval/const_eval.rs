@@ -21,7 +21,7 @@ use std::collections::HashMap;
 use tracing::{debug, trace};
 
 use ast::{Ast, LexToken};
-use astdb::AstDb;
+use ast::astdb::AstDb;
 use ir::{ConstBuiltins, ObjProps, ParameterValue, RegionProps, strip_kmg};
 use ir::symtable::SymbolTable;
 

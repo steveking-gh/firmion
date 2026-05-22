@@ -12,7 +12,7 @@
 #![doc(hidden)]
 
 use anyhow::bail;
-use ast::{Ast, LexToken, is_reserved_identifier};
+use crate::{Ast, LexToken, is_reserved_identifier};
 use diags::depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
 use diags::{Diags, SourceSpan};
 use indextree::NodeId;

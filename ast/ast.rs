@@ -12,6 +12,8 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
+pub mod astdb;
+
 mod lexer;
 use lexer::Lexer;
 

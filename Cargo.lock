@@ -259,23 +259,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "firmion-astdb"
-version = "0.7.0"
-dependencies = [
- "anyhow",
- "firmion-ast",
- "firmion-diags",
- "indextree",
- "tracing",
-]
-
-[[package]]
 name = "firmion-const-eval"
 version = "0.7.0"
 dependencies = [
  "anyhow",
  "firmion-ast",
- "firmion-astdb",
  "firmion-diags",
  "firmion-ir",
  "firmion-linearizer",
@@ -388,7 +376,6 @@ version = "0.7.0"
 dependencies = [
  "anyhow",
  "firmion-ast",
- "firmion-astdb",
  "firmion-diags",
  "firmion-ir",
  "firmion-linearizer",
@@ -456,7 +443,6 @@ version = "0.7.0"
 dependencies = [
  "anyhow",
  "firmion-ast",
- "firmion-astdb",
  "firmion-const-eval",
  "firmion-diags",
  "firmion-exec-phase",
