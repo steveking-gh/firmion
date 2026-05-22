@@ -1,0 +1,14 @@
+CHANGELOG.md
+  h_5b3f31968f5853 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "fd0991a684ed872ab4cb8f72dc040a3717a45747",
+  "prompts": {},
+  "humans": {
+    "h_5b3f31968f5853": {
+      "author": "Steve King <12994437+steveking-gh@users.noreply.github.com>"
+    }
+  }
+}
