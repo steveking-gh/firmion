@@ -13,7 +13,7 @@
 #![doc(hidden)]
 
 use firmion_extension::{FirmionExtension, ParamArg, ParamDesc, ParamKind};
-use extension_registry::ExtensionRegistry;
+use firmion_extension::extension_registry::ExtensionRegistry;
 
 pub struct Crc32c;
 

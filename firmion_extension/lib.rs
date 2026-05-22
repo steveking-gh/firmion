@@ -33,6 +33,9 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
+pub mod extension_registry;
+pub mod test_mocks;
+
 /// The kind of a declared extension parameter.
 ///
 /// Used in [`ParamDesc`] to specify what type of argument a parameter accepts.

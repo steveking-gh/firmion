@@ -21,7 +21,7 @@ use layoutdb::LayoutDb;
 #[allow(unused_imports)]
 use tracing::{debug, error, info, trace, warn};
 
-use extension_registry::{ExtensionRegistry, ParamKind};
+use firmion_extension::extension_registry::{ExtensionRegistry, ParamKind};
 use ir::{DataType, IR, IRKind, IROperand, ObjsecInfo, ParameterValue, RegionProps};
 use objfile::ObjFileResolver;
 use std::{

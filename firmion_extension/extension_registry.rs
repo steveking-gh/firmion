@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 
-pub use firmion_extension::{FirmionExtension, ParamArg, ParamDesc, ParamKind};
+pub use crate::{FirmionExtension, ParamArg, ParamDesc, ParamKind};
 
 /// Owns a registered extension alongside its cached metadata.
 ///
@@ -79,13 +79,13 @@ impl ExtensionRegistry {
     }
 }
 
-pub mod test_mocks;
+
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use firmion_extension::ParamArg;
-    use test_mocks::*;
+    use crate::ParamArg;
+    use crate::test_mocks::*;
 
     #[test]
     fn test_registry_registration_and_lookup() {

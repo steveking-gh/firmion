@@ -12,7 +12,7 @@ repository.workspace = true
 path = "src/sha256.rs"
 
 [dependencies]
-extension_registry = { workspace = true }
+
 firmion_extension = { workspace = true }
 sha2 = { version = "0.11.0" }
 

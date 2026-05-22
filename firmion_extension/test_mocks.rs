@@ -2,7 +2,8 @@
 #![doc(hidden)]
 
 use super::*;
-use firmion_extension::{ParamArg, ParamDesc, ParamKind};
+use crate::{ParamArg, ParamDesc, ParamKind};
+use crate::extension_registry::ExtensionRegistry;
 use std::cell::Cell;
 
 pub struct MockCrc {

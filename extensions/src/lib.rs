@@ -14,7 +14,7 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
-use extension_registry::ExtensionRegistry;
+use firmion_extension::extension_registry::ExtensionRegistry;
 
 /// Registers all compiled-in extensions into `registry`.
 /// Call once before compiling any Firmion scripts.

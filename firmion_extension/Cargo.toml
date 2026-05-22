@@ -12,5 +12,11 @@ repository.workspace = true
 [lib]
 path = "lib.rs"
 
+[dependencies]
+tracing = "0.1.44"
+
+[dev-dependencies]
+tracing-subscriber = "0.3.22"
+
 [lints]
 workspace = true

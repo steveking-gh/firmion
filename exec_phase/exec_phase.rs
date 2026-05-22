@@ -14,7 +14,7 @@
 
 use anyhow::{Result, anyhow};
 use diags::{Diags, SourceSpan};
-use extension_registry::{ExtensionRegistry, ParamArg, ParamKind};
+use firmion_extension::extension_registry::{ExtensionRegistry, ParamArg, ParamKind};
 use ir::{DataType, IR, IRKind, ParameterValue};
 use irdb::IRDb;
 use locationdb::LocationDb;

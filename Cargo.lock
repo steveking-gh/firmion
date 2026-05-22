@@ -285,7 +285,7 @@ dependencies = [
  "anyhow",
  "firmion-const-eval",
  "firmion-diags",
- "firmion-extension-registry",
+ "firmion-extension",
  "firmion-ir",
  "firmion-irdb",
  "firmion-locationdb",
@@ -297,12 +297,7 @@ dependencies = [
 [[package]]
 name = "firmion-extension"
 version = "0.7.0"
-
-[[package]]
-name = "firmion-extension-registry"
-version = "0.7.0"
 dependencies = [
- "firmion-extension",
  "tracing",
  "tracing-subscriber",
 ]
@@ -311,7 +306,7 @@ dependencies = [
 name = "firmion-extensions"
 version = "0.7.0"
 dependencies = [
- "firmion-extension-registry",
+ "firmion-extension",
  "firmion-std-crc32c",
  "firmion-std-esp-checksum",
  "firmion-std-md5",
@@ -335,7 +330,7 @@ dependencies = [
  "anyhow",
  "firmion-const-eval",
  "firmion-diags",
- "firmion-extension-registry",
+ "firmion-extension",
  "firmion-ir",
  "firmion-layoutdb",
  "firmion-objfile",
@@ -352,7 +347,7 @@ dependencies = [
  "firmion-ast",
  "firmion-const-eval",
  "firmion-diags",
- "firmion-extension-registry",
+ "firmion-extension",
  "firmion-ir",
  "firmion-irdb",
  "firmion-locationdb",
@@ -426,7 +421,7 @@ dependencies = [
  "firmion-const-eval",
  "firmion-diags",
  "firmion-exec-phase",
- "firmion-extension-registry",
+ "firmion-extension",
  "firmion-extensions",
  "firmion-ir",
  "firmion-irdb",
@@ -459,7 +454,6 @@ dependencies = [
  "assert_cmd",
  "crc32c",
  "firmion-extension",
- "firmion-extension-registry",
  "predicates",
 ]
 
@@ -469,7 +463,6 @@ version = "0.7.0"
 dependencies = [
  "assert_cmd",
  "firmion-extension",
- "firmion-extension-registry",
  "predicates",
 ]
 
@@ -479,7 +472,6 @@ version = "0.7.0"
 dependencies = [
  "assert_cmd",
  "firmion-extension",
- "firmion-extension-registry",
  "md-5",
  "predicates",
 ]
@@ -490,7 +482,6 @@ version = "0.7.0"
 dependencies = [
  "assert_cmd",
  "firmion-extension",
- "firmion-extension-registry",
  "predicates",
  "sha2",
 ]
@@ -501,7 +492,6 @@ version = "0.7.0"
 dependencies = [
  "assert_cmd",
  "firmion-extension",
- "firmion-extension-registry",
  "predicates",
 ]
 

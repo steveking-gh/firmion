@@ -12,7 +12,7 @@ repository.workspace = true
 path = "src/xor.rs"
 
 [dependencies]
-extension_registry = { workspace = true }
+
 firmion_extension = { workspace = true }
 
 [dev-dependencies]

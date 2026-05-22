@@ -13,7 +13,7 @@ path = "src/crc32c.rs"
 
 [dependencies]
 crc32c = "0.6"
-extension_registry = { workspace = true }
+
 firmion_extension = { workspace = true }
 
 [dev-dependencies]

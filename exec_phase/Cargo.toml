@@ -15,7 +15,7 @@ path = "exec_phase.rs"
 [dependencies]
 anyhow = "1.0.34"
 diags = { workspace = true }
-extension_registry = { workspace = true }
+firmion_extension = { workspace = true }
 ir = { workspace = true }
 irdb = { workspace = true }
 const_eval = { workspace = true }

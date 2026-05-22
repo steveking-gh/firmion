@@ -31,7 +31,7 @@ members = [
 
     "diags",
     "exec_phase",
-    "extension_registry",
+
     "extensions",
     "firmion_extension",
     "ir",
@@ -77,7 +77,7 @@ const_eval = { package = "firmion-const-eval", path = "const_eval", version = "0
 
 diags = { package = "firmion-diags", path = "diags", version = "0.7.0" }
 exec_phase = { package = "firmion-exec-phase", path = "exec_phase", version = "0.7.0" }
-extension_registry = { package = "firmion-extension-registry", path = "extension_registry", version = "0.7.0" }
+
 extensions = { package = "firmion-extensions", path = "extensions", version = "0.7.0" }
 firmion_extension = { package = "firmion-extension", path = "firmion_extension", version = "0.7.0" }
 ir = { package = "firmion-ir", path = "ir", version = "0.7.0" }

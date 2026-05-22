@@ -16,7 +16,7 @@ path = "irdb.rs"
 anyhow = "1.0.34"
 # local dependencies
 diags = { workspace = true }
-extension_registry = { workspace = true }
+firmion_extension = { workspace = true }
 indextree = "4.3.1"
 ir = { workspace = true }
 layoutdb = { workspace = true }

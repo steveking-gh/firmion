@@ -28,7 +28,7 @@ ast = { workspace = true }
 const_eval = { workspace = true }
 diags = { workspace = true }
 exec_phase = { workspace = true }
-extension_registry = { workspace = true }
+firmion_extension = { workspace = true }
 extensions = { workspace = true }
 ir = { workspace = true }
 irdb = { workspace = true }

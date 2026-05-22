@@ -19,7 +19,7 @@
 use locationdb::{AddressState, Location, LocationDb};
 
 use diags::Diags;
-use extension_registry::ExtensionRegistry;
+use firmion_extension::extension_registry::ExtensionRegistry;
 use ir::{ConstBuiltins, DataType, EffectiveRegion, IR, IRKind, ParameterValue};
 use irdb::IRDb;
 use const_eval::ireval::{ParmValDb, evaluate_string_expr};

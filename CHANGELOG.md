@@ -14,6 +14,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - INTERNAL: moved symtable library as submodule of ir
 - INTERNAL: moved astdb library as submodule of ast
 - INTERNAL: moved ireval and linearizer as submodules of const_eval
+- INTERNAL: moved test_mocks and extension_registry as submodules of firmion_extension
 
 ## [0.7.0] - 2026-05-05 -
 
