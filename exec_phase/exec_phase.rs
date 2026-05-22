@@ -12,6 +12,8 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
+pub mod output_buffer;
+pub mod validation_phase;
 use anyhow::{Result, anyhow};
 use diags::{Diags, SourceSpan};
 use firmion_extension::extension_registry::{ExtensionRegistry, ParamArg, ParamKind};
@@ -20,7 +22,7 @@ use irdb::IRDb;
 use layout_phase::locationdb::LocationDb;
 use layout_phase::mapdb::MapDb;
 use const_eval::ireval::{ParmValDb, evaluate_string_expr, execute_assert};
-use output_buffer::OutputBuffer;
+use crate::output_buffer::OutputBuffer;
 use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::{Seek, SeekFrom};

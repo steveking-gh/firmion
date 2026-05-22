@@ -32,7 +32,7 @@ use layout_phase::LayoutPhase;
 use irdb::layoutdb::LayoutDb;
 use map_phase::{format_c99, format_csv, format_json, format_rs};
 use irdb::regiondb::RegionDb;
-use validation_phase::ValidationPhase;
+use exec_phase::validation_phase::ValidationPhase;
 
 #[allow(unused_imports)]
 use tracing::{debug, error, info, trace, warn};

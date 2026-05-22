@@ -22,7 +22,7 @@ layout_phase = { workspace = true }
 const_eval = { workspace = true }
 
 
-output_buffer = { workspace = true }
+
 tracing = "0.1.44"
 
 [lints]

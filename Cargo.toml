@@ -38,12 +38,7 @@ members = [
     "irdb",
     "layout_phase",
     "map_phase",
-    "output_buffer",
     "process",
-
-
-
-    "validation_phase",
 ]
 
 [workspace.package]
@@ -74,12 +69,7 @@ ir = { package = "firmion-ir", path = "ir", version = "0.7.0" }
 irdb = { package = "firmion-irdb", path = "irdb", version = "0.7.0" }
 layout_phase = { package = "firmion-layout-phase", path = "layout_phase", version = "0.7.0" }
 map_phase = { package = "firmion-map-phase", path = "map_phase", version = "0.7.0" }
-output_buffer = { package = "firmion-output-buffer", path = "output_buffer", version = "0.7.0" }
 process = { package = "firmion-process", path = "process", version = "0.7.0" }
-
-
-
-validation_phase = { package = "firmion-validation-phase", path = "validation_phase", version = "0.7.0" }
 
 [features]
 default = ["std-crc32c", "std-sha256", "std-md5", "std-xor", "std-esp-checksum"]

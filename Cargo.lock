@@ -289,7 +289,6 @@ dependencies = [
  "firmion-ir",
  "firmion-irdb",
  "firmion-layout-phase",
- "firmion-output-buffer",
  "tracing",
 ]
 
@@ -367,10 +366,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "firmion-output-buffer"
-version = "0.7.0"
-
-[[package]]
 name = "firmion-process"
 version = "0.7.0"
 dependencies = [
@@ -385,20 +380,7 @@ dependencies = [
  "firmion-irdb",
  "firmion-layout-phase",
  "firmion-map-phase",
- "firmion-validation-phase",
  "parse_int",
- "tracing",
-]
-
-[[package]]
-name = "firmion-validation-phase"
-version = "0.7.0"
-dependencies = [
- "anyhow",
- "firmion-const-eval",
- "firmion-diags",
- "firmion-ir",
- "firmion-irdb",
  "tracing",
 ]
 
