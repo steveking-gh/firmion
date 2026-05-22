@@ -11,8 +11,8 @@ use diags::Diags;
 use ir::IRKind;
 use ir::ParameterValue;
 use irdb::IRDb;
-use irdb::locationdb::LocationDb;
-use mapdb::{ConstEntry, LabelEntry, MapDb, SectionEntry};
+use layout_phase::locationdb::LocationDb;
+use layout_phase::mapdb::{ConstEntry, LabelEntry, MapDb, SectionEntry};
 
 #[allow(unused_imports)]
 use tracing::{debug, error, info, trace, warn};

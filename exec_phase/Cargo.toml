@@ -18,9 +18,10 @@ diags = { workspace = true }
 firmion_extension = { workspace = true }
 ir = { workspace = true }
 irdb = { workspace = true }
+layout_phase = { workspace = true }
 const_eval = { workspace = true }
 
-mapdb = { workspace = true }
+
 output_buffer = { workspace = true }
 tracing = "0.1.44"
 

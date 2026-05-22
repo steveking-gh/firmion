@@ -29,7 +29,7 @@ use firmion_extension::test_mocks::register_test_extensions;
 use ir::{ConstBuiltins, ParameterValue};
 use irdb::IRDb;
 use layout_phase::LayoutPhase;
-use layoutdb::LayoutDb;
+use irdb::layoutdb::LayoutDb;
 use map_phase::{format_c99, format_csv, format_json, format_rs};
 use irdb::regiondb::RegionDb;
 use validation_phase::ValidationPhase;

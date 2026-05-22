@@ -14,18 +14,19 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
-pub mod locationdb;
+pub mod layoutdb;
 pub mod regiondb;
+pub mod objfile;
 use diags::Diags;
 use diags::SourceSpan;
-use layoutdb::LayoutDb;
+use crate::layoutdb::LayoutDb;
 
 #[allow(unused_imports)]
 use tracing::{debug, error, info, trace, warn};
 
 use firmion_extension::extension_registry::{ExtensionRegistry, ParamKind};
 use ir::{DataType, IR, IRKind, IROperand, ObjsecInfo, ParameterValue, RegionProps};
-use objfile::ObjFileResolver;
+use crate::objfile::ObjFileResolver;
 use std::{
     collections::{HashMap, HashSet},
     fs,

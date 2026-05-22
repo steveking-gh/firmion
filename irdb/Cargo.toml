@@ -19,9 +19,11 @@ diags = { workspace = true }
 firmion_extension = { workspace = true }
 indextree = "4.3.1"
 ir = { workspace = true }
-layoutdb = { workspace = true }
+ast = { workspace = true }
+object = { version = "0.36", default-features = false, features = ["read", "elf"] }
+
 const_eval = { workspace = true }
-objfile = { workspace = true }
+
 parse_int = "0.9.0"
 
 tracing = "0.1.44"

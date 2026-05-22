@@ -16,7 +16,9 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
-use irdb::locationdb::{AddressState, Location, LocationDb};
+pub mod locationdb;
+pub mod mapdb;
+use crate::locationdb::{AddressState, Location, LocationDb};
 
 use diags::Diags;
 use firmion_extension::extension_registry::ExtensionRegistry;

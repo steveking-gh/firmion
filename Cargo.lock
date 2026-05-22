@@ -288,7 +288,7 @@ dependencies = [
  "firmion-extension",
  "firmion-ir",
  "firmion-irdb",
- "firmion-mapdb",
+ "firmion-layout-phase",
  "firmion-output-buffer",
  "tracing",
 ]
@@ -327,13 +327,13 @@ name = "firmion-irdb"
 version = "0.7.0"
 dependencies = [
  "anyhow",
+ "firmion-ast",
  "firmion-const-eval",
  "firmion-diags",
  "firmion-extension",
  "firmion-ir",
- "firmion-layoutdb",
- "firmion-objfile",
  "indextree",
+ "object",
  "parse_int",
  "tracing",
 ]
@@ -354,19 +354,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "firmion-layoutdb"
-version = "0.7.0"
-dependencies = [
- "anyhow",
- "firmion-ast",
- "firmion-const-eval",
- "firmion-diags",
- "firmion-ir",
- "indextree",
- "tracing",
-]
-
-[[package]]
 name = "firmion-map-phase"
 version = "0.7.0"
 dependencies = [
@@ -374,26 +361,9 @@ dependencies = [
  "firmion-diags",
  "firmion-ir",
  "firmion-irdb",
- "firmion-mapdb",
+ "firmion-layout-phase",
  "serde_json",
  "tracing",
-]
-
-[[package]]
-name = "firmion-mapdb"
-version = "0.7.0"
-dependencies = [
- "firmion-diags",
- "firmion-ir",
-]
-
-[[package]]
-name = "firmion-objfile"
-version = "0.7.0"
-dependencies = [
- "firmion-diags",
- "firmion-ir",
- "object",
 ]
 
 [[package]]
@@ -414,9 +384,7 @@ dependencies = [
  "firmion-ir",
  "firmion-irdb",
  "firmion-layout-phase",
- "firmion-layoutdb",
  "firmion-map-phase",
- "firmion-mapdb",
  "firmion-validation-phase",
  "parse_int",
  "tracing",
