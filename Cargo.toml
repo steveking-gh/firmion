@@ -37,7 +37,7 @@ members = [
     "ir",
     "irdb",
     "layout_phase",
-    "map_phase",
+
     "process",
 ]
 
@@ -68,7 +68,7 @@ firmion_extension = { package = "firmion-extension", path = "firmion_extension",
 ir = { package = "firmion-ir", path = "ir", version = "0.7.0" }
 irdb = { package = "firmion-irdb", path = "irdb", version = "0.7.0" }
 layout_phase = { package = "firmion-layout-phase", path = "layout_phase", version = "0.7.0" }
-map_phase = { package = "firmion-map-phase", path = "map_phase", version = "0.7.0" }
+
 process = { package = "firmion-process", path = "process", version = "0.7.0" }
 
 [features]

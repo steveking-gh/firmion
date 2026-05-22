@@ -353,19 +353,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "firmion-map-phase"
-version = "0.7.0"
-dependencies = [
- "firmion-const-eval",
- "firmion-diags",
- "firmion-ir",
- "firmion-irdb",
- "firmion-layout-phase",
- "serde_json",
- "tracing",
-]
-
-[[package]]
 name = "firmion-process"
 version = "0.7.0"
 dependencies = [
@@ -379,8 +366,8 @@ dependencies = [
  "firmion-ir",
  "firmion-irdb",
  "firmion-layout-phase",
- "firmion-map-phase",
  "parse_int",
+ "serde_json",
  "tracing",
 ]
 

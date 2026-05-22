@@ -13,6 +13,7 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
+pub mod map_phase;
 use anyhow::{Context, Result, anyhow};
 use parse_int::parse;
 use std::collections::HashMap;
@@ -30,7 +31,7 @@ use ir::{ConstBuiltins, ParameterValue};
 use irdb::IRDb;
 use layout_phase::LayoutPhase;
 use irdb::layoutdb::LayoutDb;
-use map_phase::{format_c99, format_csv, format_json, format_rs};
+use crate::map_phase::{format_c99, format_csv, format_json, format_rs};
 use irdb::regiondb::RegionDb;
 use exec_phase::validation_phase::ValidationPhase;
 
