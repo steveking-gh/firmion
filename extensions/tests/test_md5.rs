@@ -19,7 +19,7 @@ mod tests {
         // CARGO_MANIFEST_DIR is set to the crate root (std/md5).
         // Two levels up is the workspace root.
         let manifest = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-        manifest.join("../..").join(rel)
+        manifest.join("..").join(rel)
     }
 
     /// Runs the firmion binary on a .firm file and asserts success.
@@ -47,7 +47,7 @@ mod tests {
     #[test]
     fn md5_section_form() {
         let out = run_and_read(
-            "std/md5/tests/md5_section.firm",
+            "extensions/tests/md5/md5_section.firm",
             "md5_section.bin",
         );
         assert_eq!(
@@ -67,7 +67,7 @@ mod tests {
     #[test]
     fn md5_1_byte() {
         let out = run_and_read(
-            "std/md5/tests/md5_1_byte.firm",
+            "extensions/tests/md5/md5_1_byte.firm",
             "md5_1_byte.bin",
         );
         assert_eq!(
@@ -87,7 +87,7 @@ mod tests {
     #[test]
     fn md5_16_byte() {
         let out = run_and_read(
-            "std/md5/tests/md5_16_byte.firm",
+            "extensions/tests/md5/md5_16_byte.firm",
             "md5_16_byte.bin",
         );
         assert_eq!(
@@ -109,7 +109,7 @@ mod tests {
     #[test]
     fn md5_64_byte() {
         let out = run_and_read(
-            "std/md5/tests/md5_64_byte.firm",
+            "extensions/tests/md5/md5_64_byte.firm",
             "md5_64_byte.bin",
         );
         let mut expected: Vec<u8> = (0x00u8..=0x3F).collect();
@@ -123,7 +123,7 @@ mod tests {
     /// sizeof(std::md5) must be 16.
     #[test]
     fn md5_sizeof() {
-        let src_path = workspace_path("std/md5/tests/md5_sizeof.firm");
+        let src_path = workspace_path("extensions/tests/md5/md5_sizeof.firm");
         let out_path = workspace_path("md5_sizeof.bin");
         Command::cargo_bin("firmion")
             .unwrap()
@@ -139,7 +139,7 @@ mod tests {
     /// than once in the output.  Expects ERR_173 and a non-zero exit code.
     #[test]
     fn md5_ambiguous_section() {
-        let src_path = workspace_path("std/md5/tests/md5_ambiguous_section.firm");
+        let src_path = workspace_path("extensions/tests/md5/md5_ambiguous_section.firm");
         Command::cargo_bin("firmion")
             .unwrap()
             .arg(&src_path)

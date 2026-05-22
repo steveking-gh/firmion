@@ -16,17 +16,28 @@
 
 use firmion_extension::extension_registry::ExtensionRegistry;
 
+#[cfg(feature = "std-crc32c")]
+pub mod crc32c;
+#[cfg(feature = "std-sha256")]
+pub mod sha256;
+#[cfg(feature = "std-md5")]
+pub mod md5;
+#[cfg(feature = "std-xor")]
+pub mod xor;
+#[cfg(feature = "std-esp-checksum")]
+pub mod esp_checksum;
+
 /// Registers all compiled-in extensions into `registry`.
 /// Call once before compiling any Firmion scripts.
 pub fn register_all(registry: &mut ExtensionRegistry) {
     #[cfg(feature = "std-crc32c")]
-    std_crc32c::register(registry);
+    crc32c::register(registry);
     #[cfg(feature = "std-sha256")]
-    std_sha256::register(registry);
+    sha256::register(registry);
     #[cfg(feature = "std-md5")]
-    std_md5::register(registry);
+    md5::register(registry);
     #[cfg(feature = "std-xor")]
-    std_xor::register(registry);
+    xor::register(registry);
     #[cfg(feature = "std-esp-checksum")]
-    std_esp_checksum::register(registry);
+    esp_checksum::register(registry);
 }

@@ -18,7 +18,7 @@ mod tests {
         // CARGO_MANIFEST_DIR is set to the crate root (std/xor).
         // Two levels up is the workspace root.
         let manifest = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-        manifest.join("../..").join(rel)
+        manifest.join("..").join(rel)
     }
 
     /// Runs the firmion binary on a .firm file and asserts success.
@@ -44,7 +44,7 @@ mod tests {
     #[test]
     fn esp_checksum_section() {
         let out = run_and_read(
-            "std/esp_checksum/tests/esp_checksum_section.firm",
+            "extensions/tests/esp_checksum/esp_checksum_section.firm",
             "esp_checksum_section.bin",
         );
         assert_eq!(out.len(), 73, "unexpected image size");
@@ -54,7 +54,7 @@ mod tests {
     /// sizeof(std::esp_checksum) must be 1.
     #[test]
     fn esp_checksum_sizeof() {
-        let src_path = workspace_path("std/esp_checksum/tests/esp_checksum_sizeof.firm");
+        let src_path = workspace_path("extensions/tests/esp_checksum/esp_checksum_sizeof.firm");
         let out_path = workspace_path("esp_checksum_sizeof.bin");
         Command::cargo_bin("firmion")
             .unwrap()

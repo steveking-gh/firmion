@@ -306,12 +306,12 @@ dependencies = [
 name = "firmion-extensions"
 version = "0.7.0"
 dependencies = [
+ "assert_cmd",
+ "crc32c",
  "firmion-extension",
- "firmion-std-crc32c",
- "firmion-std-esp-checksum",
- "firmion-std-md5",
- "firmion-std-sha256",
- "firmion-std-xor",
+ "md-5",
+ "predicates",
+ "sha2",
 ]
 
 [[package]]
@@ -445,54 +445,6 @@ dependencies = [
  "firmion-ir",
  "firmion-irdb",
  "tracing",
-]
-
-[[package]]
-name = "firmion-std-crc32c"
-version = "0.7.0"
-dependencies = [
- "assert_cmd",
- "crc32c",
- "firmion-extension",
- "predicates",
-]
-
-[[package]]
-name = "firmion-std-esp-checksum"
-version = "0.7.0"
-dependencies = [
- "assert_cmd",
- "firmion-extension",
- "predicates",
-]
-
-[[package]]
-name = "firmion-std-md5"
-version = "0.7.0"
-dependencies = [
- "assert_cmd",
- "firmion-extension",
- "md-5",
- "predicates",
-]
-
-[[package]]
-name = "firmion-std-sha256"
-version = "0.7.0"
-dependencies = [
- "assert_cmd",
- "firmion-extension",
- "predicates",
- "sha2",
-]
-
-[[package]]
-name = "firmion-std-xor"
-version = "0.7.0"
-dependencies = [
- "assert_cmd",
- "firmion-extension",
- "predicates",
 ]
 
 [[package]]

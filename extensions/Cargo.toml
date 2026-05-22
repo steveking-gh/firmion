@@ -13,19 +13,21 @@ repository.workspace = true
 path = "src/lib.rs"
 
 [features]
-std-crc32c = ["dep:std_crc32c"]
-std-sha256 = ["dep:std_sha256"]
-std-md5 = ["dep:std_md5"]
-std-xor = ["dep:std_xor"]
-std-esp-checksum = ["dep:std_esp_checksum"]
+std-crc32c = ["dep:crc32c"]
+std-sha256 = ["dep:sha2"]
+std-md5 = ["dep:md-5"]
+std-xor = []
+std-esp-checksum = []
 
 [dependencies]
 firmion_extension = { workspace = true }
-std_crc32c = { workspace = true, optional = true }
-std_esp_checksum = { workspace = true, optional = true }
-std_md5 = { workspace = true, optional = true }
-std_sha256 = { workspace = true, optional = true }
-std_xor = { workspace = true, optional = true }
+crc32c = { version = "0.6", optional = true }
+md-5 = { version = "0.11", optional = true }
+sha2 = { version = "0.11.0", optional = true }
+
+[dev-dependencies]
+assert_cmd = "2.2.1"
+predicates = "3.1.4"
 
 [lints]
 workspace = true

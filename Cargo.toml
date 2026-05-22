@@ -47,11 +47,7 @@ members = [
     "output_buffer",
     "process",
     "regiondb",
-    "extensions/std/crc32c",
-    "extensions/std/esp_checksum",
-    "extensions/std/md5",
-    "extensions/std/sha256",
-    "extensions/std/xor",
+
 
     "validation_phase",
 ]
@@ -93,11 +89,7 @@ objfile = { package = "firmion-objfile", path = "objfile", version = "0.7.0" }
 output_buffer = { package = "firmion-output-buffer", path = "output_buffer", version = "0.7.0" }
 process = { package = "firmion-process", path = "process", version = "0.7.0" }
 regiondb = { package = "firmion-regiondb", path = "regiondb", version = "0.7.0" }
-std_crc32c = { package = "firmion-std-crc32c", path = "extensions/std/crc32c", version = "0.7.0" }
-std_esp_checksum = { package = "firmion-std-esp-checksum", path = "extensions/std/esp_checksum", version = "0.7.0" }
-std_md5 = { package = "firmion-std-md5", path = "extensions/std/md5", version = "0.7.0" }
-std_sha256 = { package = "firmion-std-sha256", path = "extensions/std/sha256", version = "0.7.0" }
-std_xor = { package = "firmion-std-xor", path = "extensions/std/xor", version = "0.7.0" }
+
 
 validation_phase = { package = "firmion-validation-phase", path = "validation_phase", version = "0.7.0" }
 

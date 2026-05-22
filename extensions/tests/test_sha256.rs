@@ -19,7 +19,7 @@ mod tests {
         // CARGO_MANIFEST_DIR is set to the crate root (std/sha256).
         // Two levels up is the workspace root.
         let manifest = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-        manifest.join("../..").join(rel)
+        manifest.join("..").join(rel)
     }
 
     /// Runs the firmion binary on a .firm file and asserts success.
@@ -47,7 +47,7 @@ mod tests {
     #[test]
     fn sha256_section_form() {
         let out = run_and_read(
-            "std/sha256/tests/sha256_section.firm",
+            "extensions/tests/sha256/sha256_section.firm",
             "sha256_section.bin",
         );
         assert_eq!(
@@ -69,7 +69,7 @@ mod tests {
     #[test]
     fn sha256_1_byte() {
         let out = run_and_read(
-            "std/sha256/tests/sha256_1_byte.firm",
+            "extensions/tests/sha256/sha256_1_byte.firm",
             "sha256_1_byte.bin",
         );
         assert_eq!(
@@ -90,7 +90,7 @@ mod tests {
     #[test]
     fn sha256_16_byte() {
         let out = run_and_read(
-            "std/sha256/tests/sha256_16_byte.firm",
+            "extensions/tests/sha256/sha256_16_byte.firm",
             "sha256_16_byte.bin",
         );
         assert_eq!(
@@ -113,7 +113,7 @@ mod tests {
     #[test]
     fn sha256_64_byte() {
         let out = run_and_read(
-            "std/sha256/tests/sha256_64_byte.firm",
+            "extensions/tests/sha256/sha256_64_byte.firm",
             "sha256_64_byte.bin",
         );
         let mut expected: Vec<u8> = (0x00u8..=0x3F).collect();
@@ -129,7 +129,7 @@ mod tests {
     /// sizeof(std::sha256) must be 32.
     #[test]
     fn sha256_sizeof() {
-        let src_path = workspace_path("std/sha256/tests/sha256_sizeof.firm");
+        let src_path = workspace_path("extensions/tests/sha256/sha256_sizeof.firm");
         let out_path = workspace_path("sha256_sizeof.bin");
         Command::cargo_bin("firmion")
             .unwrap()
@@ -145,7 +145,7 @@ mod tests {
     /// than once in the output.  Expects ERR_173 and a non-zero exit code.
     #[test]
     fn sha256_ambiguous_section() {
-        let src_path = workspace_path("std/sha256/tests/sha256_ambiguous_section.firm");
+        let src_path = workspace_path("extensions/tests/sha256/sha256_ambiguous_section.firm");
         Command::cargo_bin("firmion")
             .unwrap()
             .arg(&src_path)

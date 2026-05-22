@@ -19,7 +19,7 @@ mod tests {
         // CARGO_MANIFEST_DIR is set to the crate root (std/crc32c).
         // Two levels up is the workspace root.
         let manifest = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-        manifest.join("../..").join(rel)
+        manifest.join("..").join(rel)
     }
 
     /// Runs the firmion binary on a .firm file and asserts success.
@@ -48,7 +48,7 @@ mod tests {
     #[test]
     fn crc32c_section_form() {
         let out = run_and_read(
-            "std/crc32c/tests/crc32c_section.firm",
+            "extensions/tests/crc32c/crc32c_section.firm",
             "crc32c_section.bin",
         );
         assert_eq!(
@@ -64,7 +64,7 @@ mod tests {
     #[test]
     fn crc32c_explicit_range() {
         let out = run_and_read(
-            "std/crc32c/tests/crc32c_explicit_range.firm",
+            "extensions/tests/crc32c/crc32c_explicit_range.firm",
             "crc32c_explicit_range.bin",
         );
         assert_eq!(
@@ -77,7 +77,7 @@ mod tests {
     /// sizeof(std::crc32c) must be 4.
     #[test]
     fn crc32c_sizeof() {
-        let src_path = workspace_path("std/crc32c/tests/crc32c_sizeof.firm");
+        let src_path = workspace_path("extensions/tests/crc32c/crc32c_sizeof.firm");
         let out_path = workspace_path("crc32c_sizeof.bin");
         Command::cargo_bin("firmion")
             .unwrap()
@@ -95,7 +95,7 @@ mod tests {
     #[test]
     fn crc32c_wrapped_section() {
         let out = run_and_read(
-            "std/crc32c/tests/crc32c_wrapped_section.firm",
+            "extensions/tests/crc32c/crc32c_wrapped_section.firm",
             "crc32c_wrapped_section.bin",
         );
         assert_eq!(
@@ -113,7 +113,7 @@ mod tests {
     /// than once in the output.  Expects ERR_173 and a non-zero exit code.
     #[test]
     fn crc32c_ambiguous_section() {
-        let src_path = workspace_path("std/crc32c/tests/crc32c_ambiguous_section.firm");
+        let src_path = workspace_path("extensions/tests/crc32c/crc32c_ambiguous_section.firm");
         Command::cargo_bin("firmion")
             .unwrap()
             .arg(&src_path)
