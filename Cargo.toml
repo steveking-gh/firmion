@@ -36,10 +36,10 @@ members = [
     "firmion_extension",
     "ir",
     "irdb",
-    "ireval",
+
     "layout_phase",
     "layoutdb",
-    "linearizer",
+
     "locationdb",
     "map_phase",
     "mapdb",
@@ -82,10 +82,10 @@ extensions = { package = "firmion-extensions", path = "extensions", version = "0
 firmion_extension = { package = "firmion-extension", path = "firmion_extension", version = "0.7.0" }
 ir = { package = "firmion-ir", path = "ir", version = "0.7.0" }
 irdb = { package = "firmion-irdb", path = "irdb", version = "0.7.0" }
-ireval = { package = "firmion-ireval", path = "ireval", version = "0.7.0" }
+
 layout_phase = { package = "firmion-layout-phase", path = "layout_phase", version = "0.7.0" }
 layoutdb = { package = "firmion-layoutdb", path = "layoutdb", version = "0.7.0" }
-linearizer = { package = "firmion-linearizer", path = "linearizer", version = "0.7.0" }
+
 locationdb = { package = "firmion-locationdb", path = "locationdb", version = "0.7.0" }
 map_phase = { package = "firmion-map-phase", path = "map_phase", version = "0.7.0" }
 mapdb = { package = "firmion-mapdb", path = "mapdb", version = "0.7.0" }

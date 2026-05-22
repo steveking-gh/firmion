@@ -26,7 +26,7 @@ use ir::{IRKind, ObjProps};
 use std::collections::{HashMap, HashSet};
 use ir::symtable::SymbolTable;
 
-use linearizer::{LinIR, LinOperand, Linearizer, tok_to_irkind};
+use const_eval::linearizer::{LinIR, LinOperand, Linearizer, tok_to_irkind};
 
 // ── LayoutDb ──────────────────────────────────────────────────────────────────
 

@@ -21,7 +21,7 @@ ast = { workspace = true }
 diags = { workspace = true }
 indextree = "4.3.1"
 ir = { workspace = true }
-linearizer = { workspace = true }
+const_eval = { workspace = true }
 
 tracing = "0.1.44"
 

@@ -10,6 +10,9 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
+pub mod ireval;
+pub mod linearizer;
+
 use anyhow::bail;
 use diags::depth_guard::{DepthGuard, MAX_RECURSION_DEPTH};
 use diags::{Diags, SourceSpan};

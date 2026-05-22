@@ -32,7 +32,7 @@ extension_registry = { workspace = true }
 extensions = { workspace = true }
 ir = { workspace = true }
 irdb = { workspace = true }
-ireval = { workspace = true }
+
 layout_phase = { workspace = true }
 layoutdb = { workspace = true }
 locationdb = { workspace = true }

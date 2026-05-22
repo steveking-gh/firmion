@@ -21,7 +21,7 @@ diags = { workspace = true }
 extension_registry = { workspace = true }
 ir = { workspace = true }
 irdb = { workspace = true }
-ireval = { workspace = true }
+const_eval = { workspace = true }
 locationdb = { workspace = true }
 memmap2 = "0.9.10"
 regiondb = { workspace = true }

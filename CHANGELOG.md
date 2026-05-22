@@ -13,6 +13,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - INTERNAL: moved depth_guard library as submodule of diags
 - INTERNAL: moved symtable library as submodule of ir
 - INTERNAL: moved astdb library as submodule of ast
+- INTERNAL: moved ireval and linearizer as submodules of const_eval
 
 ## [0.7.0] - 2026-05-05 -
 

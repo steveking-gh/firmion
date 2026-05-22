@@ -16,7 +16,7 @@ use anyhow::{Result, anyhow};
 use diags::Diags;
 use ir::IRKind;
 use irdb::IRDb;
-use ireval::{ParmValDb, evaluate_string_expr, execute_assert};
+use const_eval::ireval::{ParmValDb, evaluate_string_expr, execute_assert};
 
 #[allow(unused_imports)]
 use tracing::trace;

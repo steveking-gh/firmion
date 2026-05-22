@@ -17,7 +17,7 @@ anyhow   = "1.0.34"
 diags = { workspace = true }
 ir = { workspace = true }
 irdb = { workspace = true }
-ireval = { workspace = true }
+const_eval = { workspace = true }
 tracing  = "0.1.44"
 
 [lints]

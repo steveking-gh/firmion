@@ -22,7 +22,7 @@ ast = { workspace = true }
 diags = { workspace = true }
 indextree = "4.6.1"
 ir = { workspace = true }
-linearizer = { workspace = true }
+
 parse_int = "0.9.0"
 
 tracing = "0.1.44"

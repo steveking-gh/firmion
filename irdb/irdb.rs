@@ -32,6 +32,7 @@ use std::{
     path::PathBuf,
 };
 use ir::symtable::SymbolTable;
+use const_eval::linearizer;
 
 pub struct FileInfo {
     pub path: String,

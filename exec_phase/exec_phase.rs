@@ -19,7 +19,7 @@ use ir::{DataType, IR, IRKind, ParameterValue};
 use irdb::IRDb;
 use locationdb::LocationDb;
 use mapdb::MapDb;
-use ireval::{ParmValDb, evaluate_string_expr, execute_assert};
+use const_eval::ireval::{ParmValDb, evaluate_string_expr, execute_assert};
 use output_buffer::OutputBuffer;
 use std::collections::{BTreeMap, HashMap};
 use std::fs::File;

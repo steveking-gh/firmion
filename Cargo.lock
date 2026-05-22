@@ -266,7 +266,6 @@ dependencies = [
  "firmion-ast",
  "firmion-diags",
  "firmion-ir",
- "firmion-linearizer",
  "indextree",
  "parse_int",
  "tracing",
@@ -284,11 +283,11 @@ name = "firmion-exec-phase"
 version = "0.7.0"
 dependencies = [
  "anyhow",
+ "firmion-const-eval",
  "firmion-diags",
  "firmion-extension-registry",
  "firmion-ir",
  "firmion-irdb",
- "firmion-ireval",
  "firmion-locationdb",
  "firmion-mapdb",
  "firmion-output-buffer",
@@ -334,23 +333,15 @@ name = "firmion-irdb"
 version = "0.7.0"
 dependencies = [
  "anyhow",
+ "firmion-const-eval",
  "firmion-diags",
  "firmion-extension-registry",
  "firmion-ir",
  "firmion-layoutdb",
- "firmion-linearizer",
  "firmion-objfile",
  "indextree",
  "parse_int",
  "tracing",
-]
-
-[[package]]
-name = "firmion-ireval"
-version = "0.7.0"
-dependencies = [
- "firmion-diags",
- "firmion-ir",
 ]
 
 [[package]]
@@ -359,11 +350,11 @@ version = "0.7.0"
 dependencies = [
  "anyhow",
  "firmion-ast",
+ "firmion-const-eval",
  "firmion-diags",
  "firmion-extension-registry",
  "firmion-ir",
  "firmion-irdb",
- "firmion-ireval",
  "firmion-locationdb",
  "firmion-regiondb",
  "memmap2",
@@ -376,18 +367,7 @@ version = "0.7.0"
 dependencies = [
  "anyhow",
  "firmion-ast",
- "firmion-diags",
- "firmion-ir",
- "firmion-linearizer",
- "indextree",
- "tracing",
-]
-
-[[package]]
-name = "firmion-linearizer"
-version = "0.7.0"
-dependencies = [
- "firmion-ast",
+ "firmion-const-eval",
  "firmion-diags",
  "firmion-ir",
  "indextree",
@@ -406,10 +386,10 @@ dependencies = [
 name = "firmion-map-phase"
 version = "0.7.0"
 dependencies = [
+ "firmion-const-eval",
  "firmion-diags",
  "firmion-ir",
  "firmion-irdb",
- "firmion-ireval",
  "firmion-locationdb",
  "firmion-mapdb",
  "serde_json",
@@ -450,7 +430,6 @@ dependencies = [
  "firmion-extensions",
  "firmion-ir",
  "firmion-irdb",
- "firmion-ireval",
  "firmion-layout-phase",
  "firmion-layoutdb",
  "firmion-locationdb",
@@ -531,10 +510,10 @@ name = "firmion-validation-phase"
 version = "0.7.0"
 dependencies = [
  "anyhow",
+ "firmion-const-eval",
  "firmion-diags",
  "firmion-ir",
  "firmion-irdb",
- "firmion-ireval",
  "tracing",
 ]
 

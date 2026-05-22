@@ -22,7 +22,7 @@ use diags::Diags;
 use extension_registry::ExtensionRegistry;
 use ir::{ConstBuiltins, DataType, EffectiveRegion, IR, IRKind, ParameterValue};
 use irdb::IRDb;
-use ireval::{ParmValDb, evaluate_string_expr};
+use const_eval::ireval::{ParmValDb, evaluate_string_expr};
 use regiondb::RegionDb;
 use std::collections::HashSet;
 
