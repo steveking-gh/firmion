@@ -288,7 +288,6 @@ dependencies = [
  "firmion-extension",
  "firmion-ir",
  "firmion-irdb",
- "firmion-locationdb",
  "firmion-mapdb",
  "firmion-output-buffer",
  "tracing",
@@ -350,8 +349,6 @@ dependencies = [
  "firmion-extension",
  "firmion-ir",
  "firmion-irdb",
- "firmion-locationdb",
- "firmion-regiondb",
  "memmap2",
  "tracing",
 ]
@@ -370,14 +367,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "firmion-locationdb"
-version = "0.7.0"
-dependencies = [
- "firmion-diags",
- "firmion-ir",
-]
-
-[[package]]
 name = "firmion-map-phase"
 version = "0.7.0"
 dependencies = [
@@ -385,7 +374,6 @@ dependencies = [
  "firmion-diags",
  "firmion-ir",
  "firmion-irdb",
- "firmion-locationdb",
  "firmion-mapdb",
  "serde_json",
  "tracing",
@@ -427,23 +415,10 @@ dependencies = [
  "firmion-irdb",
  "firmion-layout-phase",
  "firmion-layoutdb",
- "firmion-locationdb",
  "firmion-map-phase",
  "firmion-mapdb",
- "firmion-regiondb",
  "firmion-validation-phase",
  "parse_int",
- "tracing",
-]
-
-[[package]]
-name = "firmion-regiondb"
-version = "0.7.0"
-dependencies = [
- "anyhow",
- "firmion-diags",
- "firmion-ir",
- "firmion-irdb",
  "tracing",
 ]
 

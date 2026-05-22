@@ -12,7 +12,7 @@
 
 use diags::Diags;
 use ir::{EffectiveRegion, IRKind, RegionProps};
-use irdb::IRDb;
+use crate::IRDb;
 use std::collections::{HashMap, HashSet};
 
 #[allow(unused_imports)]

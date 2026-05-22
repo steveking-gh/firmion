@@ -31,7 +31,7 @@ use irdb::IRDb;
 use layout_phase::LayoutPhase;
 use layoutdb::LayoutDb;
 use map_phase::{format_c99, format_csv, format_json, format_rs};
-use regiondb::RegionDb;
+use irdb::regiondb::RegionDb;
 use validation_phase::ValidationPhase;
 
 #[allow(unused_imports)]

@@ -35,11 +35,11 @@ irdb = { workspace = true }
 
 layout_phase = { workspace = true }
 layoutdb = { workspace = true }
-locationdb = { workspace = true }
+
 map_phase = { workspace = true }
 mapdb = { workspace = true }
 parse_int = "0.9.0"
-regiondb = { workspace = true }
+
 tracing = "0.1.44"
 validation_phase = { workspace = true }
 

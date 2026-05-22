@@ -16,14 +16,14 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
-use locationdb::{AddressState, Location, LocationDb};
+use irdb::locationdb::{AddressState, Location, LocationDb};
 
 use diags::Diags;
 use firmion_extension::extension_registry::ExtensionRegistry;
 use ir::{ConstBuiltins, DataType, EffectiveRegion, IR, IRKind, ParameterValue};
 use irdb::IRDb;
 use const_eval::ireval::{ParmValDb, evaluate_string_expr};
-use regiondb::RegionDb;
+use irdb::regiondb::RegionDb;
 use std::collections::HashSet;
 
 #[allow(unused_imports)]

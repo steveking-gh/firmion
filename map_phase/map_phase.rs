@@ -11,7 +11,7 @@ use diags::Diags;
 use ir::IRKind;
 use ir::ParameterValue;
 use irdb::IRDb;
-use locationdb::LocationDb;
+use irdb::locationdb::LocationDb;
 use mapdb::{ConstEntry, LabelEntry, MapDb, SectionEntry};
 
 #[allow(unused_imports)]

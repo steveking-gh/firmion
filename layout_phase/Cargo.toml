@@ -22,9 +22,9 @@ firmion_extension = { workspace = true }
 ir = { workspace = true }
 irdb = { workspace = true }
 const_eval = { workspace = true }
-locationdb = { workspace = true }
+
 memmap2 = "0.9.10"
-regiondb = { workspace = true }
+
 tracing = "0.1.44"
 
 [lints]

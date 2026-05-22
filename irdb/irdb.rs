@@ -14,6 +14,8 @@
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
+pub mod locationdb;
+pub mod regiondb;
 use diags::Diags;
 use diags::SourceSpan;
 use layoutdb::LayoutDb;

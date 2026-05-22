@@ -15,6 +15,8 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - INTERNAL: moved astdb library as submodule of ast
 - INTERNAL: moved ireval and linearizer as submodules of const_eval
 - INTERNAL: moved test_mocks and extension_registry as submodules of firmion_extension
+- INTERNAL: moved extension source files to extensions
+- INTERNAL: moved locationdb and regiondb as submodules of irdb
 
 ## [0.7.0] - 2026-05-05 -
 

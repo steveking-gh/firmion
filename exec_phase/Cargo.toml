@@ -19,7 +19,7 @@ firmion_extension = { workspace = true }
 ir = { workspace = true }
 irdb = { workspace = true }
 const_eval = { workspace = true }
-locationdb = { workspace = true }
+
 mapdb = { workspace = true }
 output_buffer = { workspace = true }
 tracing = "0.1.44"

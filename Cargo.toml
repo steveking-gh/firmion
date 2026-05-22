@@ -40,13 +40,12 @@ members = [
     "layout_phase",
     "layoutdb",
 
-    "locationdb",
     "map_phase",
     "mapdb",
     "objfile",
     "output_buffer",
     "process",
-    "regiondb",
+
 
 
     "validation_phase",
@@ -82,13 +81,12 @@ irdb = { package = "firmion-irdb", path = "irdb", version = "0.7.0" }
 layout_phase = { package = "firmion-layout-phase", path = "layout_phase", version = "0.7.0" }
 layoutdb = { package = "firmion-layoutdb", path = "layoutdb", version = "0.7.0" }
 
-locationdb = { package = "firmion-locationdb", path = "locationdb", version = "0.7.0" }
 map_phase = { package = "firmion-map-phase", path = "map_phase", version = "0.7.0" }
 mapdb = { package = "firmion-mapdb", path = "mapdb", version = "0.7.0" }
 objfile = { package = "firmion-objfile", path = "objfile", version = "0.7.0" }
 output_buffer = { package = "firmion-output-buffer", path = "output_buffer", version = "0.7.0" }
 process = { package = "firmion-process", path = "process", version = "0.7.0" }
-regiondb = { package = "firmion-regiondb", path = "regiondb", version = "0.7.0" }
+
 
 
 validation_phase = { package = "firmion-validation-phase", path = "validation_phase", version = "0.7.0" }
