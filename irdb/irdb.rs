@@ -15,18 +15,20 @@
 #![doc(hidden)]
 
 pub mod layoutdb;
-pub mod regiondb;
 pub mod objfile;
+pub mod regiondb;
+use crate::layoutdb::LayoutDb;
 use diags::Diags;
 use diags::SourceSpan;
-use crate::layoutdb::LayoutDb;
 
 #[allow(unused_imports)]
 use tracing::{debug, error, info, trace, warn};
 
-use firmion_extension::extension_registry::{ExtensionRegistry, ParamKind};
-use ir::{DataType, IR, IRKind, IROperand, ObjsecInfo, ParameterValue, RegionProps};
 use crate::objfile::ObjFileResolver;
+use const_eval::linearizer;
+use firmion_extension::extension_registry::{ExtensionRegistry, ParamKind};
+use ir::symtable::SymbolTable;
+use ir::{DataType, IR, IRKind, IROperand, ObjsecInfo, ParameterValue, RegionProps};
 use std::{
     collections::{HashMap, HashSet},
     fs,
@@ -34,13 +36,18 @@ use std::{
     path::Path,
     path::PathBuf,
 };
-use ir::symtable::SymbolTable;
-use const_eval::linearizer;
 
 pub struct FileInfo {
     pub path: String,
     pub size: u64,
     pub src_loc: SourceSpan,
+}
+
+// Tracks location and padding context for one active section scope during
+// linear IR resolution.
+struct LinScopeFrame {
+    sec_name: String,
+    default_pad_byte: u8,
 }
 
 pub struct IRDb {
@@ -426,7 +433,9 @@ impl IRDb {
             IRKind::ObjAlign | IRKind::ObjVma | IRKind::ObjLma => {
                 self.validate_obj_query_operands(ir, resolver, diags)
             }
-            IRKind::Wrs | IRKind::Print | IRKind::Trace => self.validate_string_expr_operands(ir, diags),
+            IRKind::Wrs | IRKind::Print | IRKind::Trace => {
+                self.validate_string_expr_operands(ir, diags)
+            }
             IRKind::ExtensionCall => {
                 let name = self.get_opnd_as_identifier(ir, 0);
                 if ext_registry.get(name).is_none() {
@@ -653,7 +662,84 @@ impl IRDb {
         true
     }
 
-/// Convert the linear IR to real IR.  Conversion from Linear IR to real IR can fail,
+    fn trace(&self, scope_stack: &[LinScopeFrame], args: std::fmt::Arguments) {
+        if tracing::enabled!(tracing::Level::TRACE) {
+            let sec_depth = scope_stack.len();
+            let sec_name = scope_stack
+                .last()
+                .map(|f| f.sec_name.as_str())
+                .unwrap_or("global");
+            let indent = "  ".repeat(sec_depth);
+            trace!("{}[{}] {}", indent, sec_name, args);
+        }
+    }
+
+    // Resolve "__default_pad_byte" placeholder references to the active
+    // region's pad byte value or fallback to 0.
+    fn resolve_scoped_linear_ir(&mut self, lin_db: &LayoutDb) {
+        let mut scope_stack: Vec<LinScopeFrame> = Vec::new();
+        for lir in &lin_db.ir_vec {
+            // Keep track of active section scope
+            if lir.op == IRKind::SectionStart {
+                let opnd_idx = lir.operand_vec[0];
+                if let Some(parm) = self.parms.get(opnd_idx) {
+                    let sec_name = parm.val.identifier_to_str().to_string();
+                    let default_pad_byte = self
+                        .region_for_section(&sec_name)
+                        .map(|r| r.default_pad_byte)
+                        .unwrap_or(0x00);
+
+                    scope_stack.push(LinScopeFrame {
+                        sec_name,
+                        default_pad_byte,
+                    });
+                    self.trace(
+                        &scope_stack,
+                        format_args!("resolve_scoped_linear_ir: section start"),
+                    );
+                }
+            } else if lir.op == IRKind::SectionEnd {
+                self.trace(
+                    &scope_stack,
+                    format_args!("resolve_scoped_linear_ir: section end"),
+                );
+                scope_stack.pop();
+            }
+
+            // Resolve any scope-dependent parameters for the current instruction
+            self.resolve_operands_in_scope(lir, &scope_stack);
+        }
+    }
+
+    fn resolve_operands_in_scope(
+        &mut self,
+        lir: &linearizer::LinIR,
+        scope_stack: &[LinScopeFrame],
+    ) {
+        let pad_val = scope_stack
+            .last()
+            .map(|s| s.default_pad_byte)
+            .unwrap_or(0x00);
+
+        for &opnd_idx in &lir.operand_vec {
+            let mut matched = false;
+            if let Some(parm) = self.parms.get(opnd_idx)
+                && let ParameterValue::DeferredRef(ref name) = parm.val
+                && name == "__default_pad_byte"
+            {
+                matched = true;
+            }
+            if matched {
+                self.trace(scope_stack, format_args!(
+                    "resolve_operands_in_scope: resolved '__default_pad_byte' placeholder to {:#02X}", pad_val));
+                if let Some(parm) = self.parms.get_mut(opnd_idx) {
+                    parm.val = ParameterValue::Integer(pad_val as i64);
+                }
+            }
+        }
+    }
+
+    /// Convert the linear IR to real IR.  Conversion from Linear IR to real IR can fail,
     /// which is a hassle we don't want to deal with during linearization of the AST.
     fn process_linear_ir(
         &mut self,
@@ -743,6 +829,8 @@ impl IRDb {
         if !ir_db.process_lin_operands(lin_db, diags) {
             anyhow::bail!("IRDb construction failed");
         }
+
+        ir_db.resolve_scoped_linear_ir(lin_db);
 
         // Warn about consts defined but never referenced by any operand.
         // Must run after process_lin_operands so all use-sites have called mark_used.

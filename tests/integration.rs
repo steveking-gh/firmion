@@ -3743,4 +3743,42 @@ mod tests {
         // on the strict final pass even though it was suppressed during convergence.
         assert_firmion_failure("tests/suppress_arith_err_3_fail.firm", &["ERR_185"]);
     }
+
+    #[test]
+    fn region_default_pad_byte_1() {
+        let out = "tests_region_default_pad_byte_1.firm.bin";
+        Command::cargo_bin("firmion")
+            .unwrap()
+            .arg("tests/region_default_pad_byte_1.firm")
+            .arg("-o")
+            .arg(out)
+            .assert()
+            .success();
+        let bytes = fs::read(out).expect("output file missing");
+        assert_eq!(
+            bytes,
+            vec![
+                0x11, 0xFF, 0xFF, 0xFF,
+                0x22, 0xAA, 0xAA, 0xAA,
+                0x33, 0x00, 0x00, 0x00,
+                0x44, 0xEE, 0xEE, 0xEE
+            ]
+        );
+        fs::remove_file(out).ok();
+    }
+
+    #[test]
+    fn region_default_pad_byte_invalid() {
+        assert_firmion_failure("tests/region_default_pad_byte_invalid.firm", &["ERR_181"]);
+    }
+
+    #[test]
+    fn region_default_pad_byte_non_numeric() {
+        assert_firmion_failure("tests/region_default_pad_byte_non_numeric.firm", &["ERR_180"]);
+    }
+
+    #[test]
+    fn region_default_pad_byte_dup() {
+        assert_firmion_failure("tests/region_default_pad_byte_dup.firm", &["ERR_41"]);
+    }
 } // mod tests

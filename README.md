@@ -1398,10 +1398,11 @@ For example:
 
 `obj <obj name> { ... }`
 
-An `obj` statement assigns a name to a specific section in an external object or
-executable file.  The *section* in this case is not a Firmion `section`, but a
-linker section such as ".text" or ".rodata" created by an external compiler
-toolchain, e.g. [gcc](https://en.wikipedia.org/wiki/GNU_toolchain).
+An `obj` statement assigns a name to one or more sections in one or more
+external object or executable files.  The *section* in this case is not a
+Firmion `section`, but a linker section such as ".text" or ".rodata" created by
+an external compiler toolchain, e.g.
+[gcc](https://en.wikipedia.org/wiki/GNU_toolchain).
 
 By default, Firmion supports only the
 [ELF](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format) format.
@@ -1410,18 +1411,18 @@ object file format supported by the Rust
 [object](https://crates.io/crates/object) crate and rebuild Firmion from source.
 
 > [!NOTE]
-> On Linux systems, the `objdump -h <filename>` command lists all the
+> On Linux systems, use `objdump -h <filename>` to list all the
 > sections in a compatible binary file.
 
 For example:
 
     obj runtime_code {
-        file = "/path/to/exe";
+        file = "/absolute/path/to/file";
         section = ".text";
     }
 
     obj runtime_rodata {
-        file = "/path/to/exe";
+        file = "relative/path/file1";
         section = ".rodata";
     }
 
@@ -1432,33 +1433,117 @@ For example:
 
     output main;
 
+Users can glob multiple files and/or sections into a single `obj` using a syntax
+similar to [GNU `ld` wildcard
+patterns](https://sourceware.org/binutils/docs/ld/Input-Section-Wildcards.html).
+For example:
+
+    // Gather all .text sections in all object files
+    obj all_text {
+        file = "/path/to/*.o";  // All object files
+        section = ".text*";     // All text sections
+    }
+
+Users can also specify multiple match patterns as a comma separated list in
+`[]` and can exclude files or sections.  For example:
+
+    obj all_text {
+        file = ["/path/to/*.o", "/path/to/*.elf"];  // All .o and .elf files
+        section = ".text*";     // All text sections
+        // Exclude any section with 'debug' in the name and
+        // also exclude .text.foo1 and .text.foo2
+        section_exclude = ["*debug*", ".text.foo[12]"];
+    }
+
 ### Obj Properties
 
 Obj definitions support the following properties:
 
-- `file` Path to the object or executable file (required)
-- `section` Name of the section in the object file (required)
+- `file` Pattern or pattern list to match to the object file(s) (required)
+- `section` Pattern or pattern list to match to the name of the section(s) in
+  the object file (required)
+- `file_exclude` Pattern or pattern list to match to exclude files in the `file`
+  pattern
+- `section_exclude` Pattern or pattern list to match to exclude sections in the
+  `section` pattern
 
 #### Obj Property `file`
 
-Path to the object or executable file.  Firmion uses the same path resolution as
-the [wrf](#wrf-quoted-file-path) command.  Namely, paths can relative to the
-current directory or absolute.
+Pattern or pattern list to match the path to the object file(s).  Paths can be
+relative to the current directory or absolute.  On both Linux and Windows, path
+strings use forward-slashes `/` to denote directories.
+
+#### Obj Property `file_exclude`
+
+Pattern or pattern list to match to *exclude* object file(s) from the set
+matching the `file` pattern.
 
 #### Obj Property `section`
 
-Name of the linker section in the object file.  The name must include the full
-string value recorded in the object or executable file, including any leading
-characters such as the "." in ".text".
+Pattern or pattern list to match the name of the linker section in the object
+file(s).
+
+#### Obj Property `section_exclude`
+
+Pattern or pattern list to match to *exclude* sections from the set matching the
+`section` pattern.
+
+### Pattern Matching Syntax
+
+Firmion support the following special characters for file globbing.  Firmion
+silently allows an empty (no files and/or no sections) glob.
+
+| Pattern     | Description                                     |
+| ----------- | ----------------------------------------------- |
+| `*`         | Match 0 or more characters                      |
+| `?`         | Match a single character                        |
+| `[<chars>]` | Match any single character in the specified set |
+| `\*`        | Match a literal `*` character                   |
+| `\?`        | Match a literal `?` character                   |
+| `\[`        | Match a literal `[` character                   |
+| `\]`        | Match a literal `]` character                   |
+| `\"`        | Match a literal `"` character                   |
+| `\\`        | Match a literal `\` character                   |
+
+Users may also use GNU `ld` style sorting commands in a pattern.  These commands
+appear inside the quoted expression string for the pattern and may be nested.
+When globbing files, Firmion by default sorts the resulting file list by name.
+
+
+
+| Sort Command         | Allowed in<br>File Match | Allowed in<br>Section Match | Description                                       |
+| -------------------- | ------------------------ | --------------------------- | ------------------------------------------------- |
+| SORT                 | Yes                      | Yes                         | Alias for SORT_BY_NAME                            |
+| SORT_BY_NAME         | Yes                      | Yes                         | Sorts the match result by name                    |
+| SORT_BY_ALIGNMENT    | No                       | Yes                         | Sorts the match result by alignment size          |
+| SORT_BY_INIT_PIORITY | No                       | Yes                         | Sorts the match result by initialization priority |
+| REVERSE              | Yes                      | Yes                         | Reverses the sort order                           |
+
+Examples:
+
+    obj runtime_code {
+        file = [ "main.elf", "utils.elf", "drivers/*.elf" ];
+        section = "SORT(.text*)";
+    }
+
+    // Place sorted init sections first, then remaining text
+    obj boot_code {
+        file = "*.o";
+        section = [ "SORT(.init.*)", ".text*" ];
+    }
+
+    obj backwards {
+        file = "thing.o";
+        section = "REVERSE(SORT(.text*))";
+    }
 
 ### Obj Size
 
-The external object file sets size of an `obj`.  Users can query the size with
-`sizeof`.  For example:
+Users can query the size of an `obj` with `sizeof`.  For example:
 
     obj runtime_rodata {
-        file = "/path/to/exe";
-        section = ".rodata";
+        file = "*.elf";
+        section = ".rodata*";
     }
 
     section foo {
@@ -1476,8 +1561,8 @@ These addresses differ when a system copies the section before use, e.g. copies
 program code from slow FLASH memory (at the *LMA*) to fast SRAM (at the *VMA*)
 before execution.
 
-Users can query the ELF LMA and VMA of an `obj` using the [obj_lma](#obj_lma) and
-[obj_vma](#obj_vma) commands.
+Users can query the ELF LMA and VMA of an `obj` using the [`obj_lma`](#obj_lma) and
+[`obj_vma`](#obj_vma) commands.
 
 ### Firmion `addr` vs LMA and VMA
 
@@ -1487,6 +1572,84 @@ For most systems however, Firmion's `addr` plays the same role as the ELF LMA. T
 Firmion `addr` value is usually the section's *storage* address as might be used
 by a FLASH update utility.  Any subsequent copy at runtime is typically outside
 the scope of Firmion.
+
+When writing an `obj` to the output, Firmion does *not* validate that a
+section's LMA matches the associated [`addr`](#addr) value.  This allows `obj`
+placement in a simple staging area of the image file, presumably copied to the
+actual LMA by a firmware update utility.  Users are free to keep the
+[`addr`](#addr) value in sync with LMA and can use [`assert`](#assert)
+statements for validation.  The section [Handling Objs with Disjoint
+LMAs](#handling-objs-with-disjoint-lmas) shows an example of synchronizing `addr`
+and LMA.
+
+### Obj Properties and Section Globbing
+
+[Glob patterns](#pattern-matching-syntax) group multiple linker sections into a
+single `obj`, aka a `glob obj`.  Firmion packs sections contiguously, adding pad
+bytes before each section (after the first) as needed to meet each section's
+individual alignment requirement. A `glob obj` has the following properties:
+
+- [`obj_lma`](#obj_lma) returns the LMA of the *first* section.
+- [`obj_vma`](#obj_vma) returns the VMA of the *first* section.
+- [`obj_align`](#obj_align) returns the *largest* alignment of any section in
+  the `obj`.
+
+### Glob Obj LMA Validation
+
+Starting from the first section's LMA, Firmion validates the LMA of each
+subsequent section.  If an LMA is not *contiguous* with the preceding section,
+Firmion reports an error.  Firmion bypasses validation for sections with LMA=0.
+The example below groups executable sections with disjoint LMAs which results in
+an error.
+
+    // .text in boot.elf has LMA = 0x0000_0000
+    // .text in app.elf has LMA = 0x1000_0000
+    obj combined {
+        file = [ "boot.elf", "app.elf" ];
+        section = ".text*";
+    }
+    // ERROR! Users cannot glob sections with disjoint LMAs into one obj
+
+Users must place linker sections with disjoint LMAs into different `obj`s.
+
+### Handling Objs With Disjoint LMAs
+
+The output image, possibly in cooperation with a firmware update utility, must
+save each `obj` and their contained sections at the required LMA.  Some
+platforms use firmware images that define a single loadable address space.
+These images map firmware file offset 1:1 with the destination address space.
+In this case, the user can simply pad to achieve the correct LMA for each obj.
+For example:
+
+    // Output firmware image is 128K and contains
+    // both boot and app executables.
+
+    // .text in boot.elf has LMA = 0x0000_0000
+    obj boot {
+        file = "boot.elf";
+        section = ".text*";
+    }
+
+    // .text in app.elf has LMA = 0x001_0000 (64k)
+    obj app {
+        file = "app.elf";
+        section = ".text*";
+    }
+
+    section main {
+        assert obj_lma(boot) == 0;     // We expect to start at addr = 0
+        wr boot;
+        pad_addr_offset obj_lma(app);   // We're 1:1, so just pad to app's LMA
+        assert addr() == obj_lma(app);
+        wr app;
+    }
+
+    output main;
+
+Many platforms, such as the [ESP32 example](#esp32-s3), do not simply map
+firmware images 1:1 with load address.  In these cases, an onboard FLASH update
+utility copies disjoint sections from the firmware image to the actual platform
+LMA.
 
 ---
 
@@ -1508,6 +1671,9 @@ For example:
         align obj_align(runtime_rodata);
         wr runtime_rodata;
     }
+
+For a [`glob obj`](#obj-properties-and-section-globbing), `obj_align` returns the
+largest alignment of any section in the `obj`.
 
 ---
 
@@ -1538,6 +1704,9 @@ user sets feature flags to enable additional object file formats and calls
 `obj_lma` on an unsupported format, then Firmion simply returns the obj's VMA
 value.  In this way, a user can consistently use `obj_lma` for all formats.
 
+For a [`glob obj`](#obj-properties-and-section-globbing), `obj_lma` returns the
+LMA of the first section in the `obj`.
+
 ---
 
 ## obj_vma
@@ -1561,6 +1730,9 @@ For example:
         assert obj_vma(runtime_rodata) == obj_lma(runtime_rodata);
         wr runtime_rodata;
     }
+
+For a [`glob obj`](#obj-properties-and-section-globbing), `obj_vma` returns the
+VMA of the first section in the `obj`.
 
 ## output
 
@@ -1644,6 +1816,7 @@ For example:
     region FLASH {
         addr = 0xF000_0000;
         size = 1M;
+        default_pad_byte = 0xFF;
     }
 
     // Define the properties of the EEPROM memory region
@@ -1693,6 +1866,7 @@ Regions support the following properties:
 
 - `addr` Starting address (required)
 - `size` Size in bytes (required)
+- `default_pad_byte` Default pad byte for the region (Default = 0xFF) (optional)
 
 #### Region Property `addr`
 
@@ -1708,6 +1882,11 @@ size of the bound [section](#section) exceeds this value.
 Users can query the `size` property of a region with `sizeof(<region name>)`.
 
 The size value accepts a [K/M/G magnitude suffix](#number-magnitude).
+
+#### Region Proper `default_pad_byte`
+
+Optionally specifies the default pad byte value for the region.  The default
+value is 0xFF.
 
 ### Region Boundary Enforcement
 

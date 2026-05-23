@@ -499,6 +499,7 @@ pub fn evaluate_regions(
             addr: 0,
             size: 0,
             name: name.clone(),
+            default_pad_byte: 0xFF,
             src_loc: region.src_loc.clone(),
         };
         for prop_nid in ast.children(region.nid) {
@@ -530,6 +531,19 @@ pub fn evaluate_regions(
                     match prop_name.as_str() {
                         "addr" => binding.addr = val.to_u64(),
                         "size" => binding.size = val.to_u64(),
+                        "default_pad_byte" => {
+                            let pad_val = val.to_u64();
+                            if pad_val > 255 {
+                                diags.err1(
+                                    "ERR_181",
+                                    "Region property 'default_pad_byte' must be in range 0 to 255.",
+                                    expr_loc,
+                                );
+                                ok = false;
+                                continue;
+                            }
+                            binding.default_pad_byte = pad_val as u8;
+                        }
                         _ => unreachable!(),
                     }
                 }

@@ -62,6 +62,7 @@ pub struct RegionProps {
     pub size: u64,
     /// The region name as written in source, e.g. "FLASH".
     pub name: String,
+    pub default_pad_byte: u8,
     /// Source location of the region declaration for diagnostic labels.
     pub src_loc: SourceSpan,
 }
@@ -80,6 +81,7 @@ impl RegionProps {
             addr,
             size: end - addr,
             name: format!("{} & {}", self.name, other.name),
+            default_pad_byte: other.default_pad_byte,
             src_loc: other.src_loc.clone(),
         })
     }

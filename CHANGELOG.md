@@ -8,9 +8,11 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.7.1-pending]
 
+- ADDED: File and section glob capability to `obj`
+- ADDED: Optional `region` `default_pad_byte` property.
 - README: Added ESP32-S3 case study.
 - INTERNAL: Added examples/esp32 with ESP32 image experiment code
-- INTERNAL: Consolidated intenal firmion libraries to about 10.
+- INTERNAL: Consolidated internal firmion libraries to about 10.
 
 ## [0.7.0] - 2026-05-05 -
 

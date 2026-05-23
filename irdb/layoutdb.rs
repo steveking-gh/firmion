@@ -275,15 +275,14 @@ impl<'toks> LayoutDb {
                 if lops.len() == 2 {
                     lz.add_existing_operand_to_ir(wr8_lid, lops[1]);
                 } else {
-                    // Synthesize a literal 0 pad byte — no source token exists for this value.
+                    // Synthesize a placeholder reference to the default pad byte.
                     lz.add_new_operand_to_ir(
                         wr8_lid,
-                        LinOperand::Literal {
+                        LinOperand::Ref {
                             src_loc: tinfo.loc.clone(),
-                            tok: LexToken::Integer,
-                            sval: "0".to_string(),
+                            sval: "__default_pad_byte".to_string(),
                             param_name: None,
-                            data_type: ir::DataType::Integer,
+                            data_type: ir::DataType::DeferredRef,
                         },
                     );
                 }

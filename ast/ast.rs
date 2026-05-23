@@ -1146,6 +1146,7 @@ impl<'toks> Ast<'toks> {
         let mut result = true;
         let mut seen_addr = false;
         let mut seen_size = false;
+        let mut seen_default_pad = false;
 
         loop {
             let tinfo = self.tv.peek();
@@ -1178,9 +1179,15 @@ impl<'toks> Ast<'toks> {
                     }
                     seen_size = true;
                 }
+                "default_pad_byte" => {
+                    if seen_default_pad {
+                        duplicate_property = true;
+                    }
+                    seen_default_pad = true;
+                }
                 _ => {
                     let msg = format!(
-                        "Unknown region property '{}'; expected addr or size",
+                        "Unknown region property '{}'; expected addr, size, or default_pad_byte",
                         prop_val
                     );
                     diags.err1("ERR_40", &msg, prop_loc);
