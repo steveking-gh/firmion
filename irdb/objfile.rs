@@ -95,7 +95,7 @@ impl GlobOperator<SectionCandidate> for SortByAlignmentOp {
     fn name(&self) -> &str { "SORT_BY_ALIGNMENT" }
     fn apply(&self, candidates: &mut Vec<&SectionCandidate>) {
         // Stable sort, descending alignment (largest alignment first).
-        candidates.sort_by(|a, b| b.align.cmp(&a.align));
+        candidates.sort_by_key(|b| std::cmp::Reverse(b.align));
     }
 }
 
