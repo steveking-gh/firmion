@@ -1,0 +1,25 @@
+Cargo.toml
+  s_862d6aa320261a::t_96bfb924940deb 41,57-66
+  h_5b3f31968f5853 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a4e585c4f00f03a78977d63dfbf4a3f6e76031e2",
+  "prompts": {},
+  "humans": {
+    "h_5b3f31968f5853": {
+      "author": "Steve King <12994437+steveking-gh@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_862d6aa320261a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "047666ac-a301-4d2c-84e0-4c090cbe46f2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Steve King <12994437+steveking-gh@users.noreply.github.com>"
+    }
+  }
+}
