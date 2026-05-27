@@ -26,18 +26,14 @@ exclude = [
 [workspace]
 members = [
     "ast",
-
     "const_eval",
-
     "diags",
     "exec_phase",
-
     "extensions",
     "firmion_extension",
     "ir",
     "irdb",
     "layout_phase",
-
     "process",
 ]
 
@@ -45,7 +41,7 @@ members = [
 version = "0.7.0"
 authors = ["Steve King <sk@metrokings.com>"]
 edition = "2024"
-publish = true
+publish = false
 homepage = "https://github.com/steveking-gh/firmion"
 repository = "https://github.com/steveking-gh/firmion"
 license-file = "LICENSE.txt"
@@ -56,6 +52,8 @@ unsafe_code = "forbid"
 # Strip the firmion- prefix from package names.
 # The prefix only exists to prevent name collisions on crates.io.
 [workspace.dependencies]
+flexiglob = { path = "../flexiglob" }
+
 ast = { package = "firmion-ast", path = "ast", version = "0.7.0" }
 
 const_eval = { package = "firmion-const-eval", path = "const_eval", version = "0.7.0" }

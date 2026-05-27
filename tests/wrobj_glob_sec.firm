@@ -1,0 +1,8 @@
+obj code {
+    section = ".text";
+    file    = "tests/glob_test.elf";
+}
+section out {
+    wr code;
+}
+output out;

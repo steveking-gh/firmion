@@ -1014,14 +1014,20 @@ impl<'toks> Ast<'toks> {
     ///     file    = "<file-path>";
     /// }
     ///
-    ///   obj                    <- root node
-    ///   ├── <Identifier>        <- declared name
-    ///   ├── ObjProp("section")  <- section property node
-    ///   │   └── <QuotedString>  <- ELF section name
-    ///   └── ObjProp("file")     <- file property node
-    ///       └── <QuotedString>  <- file path
+    ///   obj                             <- root node
+    ///   +-- <Identifier>                <- declared name
+    ///   +-- ObjProp("section")          <- required: section glob pattern
+    ///   |   +-- <QuotedString>
+    ///   +-- ObjProp("file")             <- required: file glob pattern
+    ///   |   +-- <QuotedString>
+    ///   +-- ObjProp("file_exclude")     <- optional: file exclusion glob
+    ///   |   +-- <QuotedString>
+    ///   +-- ObjProp("section_exclude")  <- optional: section exclusion glob
+    ///       +-- <QuotedString>
     /// ```
-    /// Properties may appear in any order; both are required.
+    /// `section` and `file` are required; `file_exclude` and `section_exclude`
+    /// are optional.  All four accept glob patterns or const identifiers.
+    /// Properties may appear in any order.
     fn parse_obj(&mut self, parent: NodeId, diags: &mut Diags) -> bool {
         self.dbg_enter("parse_obj");
         let obj_nid = self.add_to_parent_and_advance(parent);
@@ -1044,6 +1050,8 @@ impl<'toks> Ast<'toks> {
 
         let mut section_seen = false;
         let mut file_seen = false;
+        let mut file_exclude_seen = false;
+        let mut section_exclude_seen = false;
 
         loop {
             let tinfo = self.tv.peek();
@@ -1059,12 +1067,16 @@ impl<'toks> Ast<'toks> {
             let prop_name = tinfo.val;
             let prop_loc = tinfo.span();
 
-            let is_section = match prop_name {
-                "section" => true,
-                "file" => false,
+            // Track whether this property has already been seen.
+            let already_seen = match prop_name {
+                "section"         => section_seen,
+                "file"            => file_seen,
+                "file_exclude"    => file_exclude_seen,
+                "section_exclude" => section_exclude_seen,
                 _ => {
                     let m = format!(
-                        "Unknown obj property '{}'. Expected 'section' or 'file'.",
+                        "Unknown obj property '{}'. \
+                         Expected 'section', 'file', 'file_exclude', or 'section_exclude'.",
                         prop_name
                     );
                     diags.err1("ERR_70", &m, prop_loc);
@@ -1072,7 +1084,7 @@ impl<'toks> Ast<'toks> {
                 }
             };
 
-            if (is_section && section_seen) || (!is_section && file_seen) {
+            if already_seen {
                 let m = format!("Duplicate '{}' property in obj block.", prop_name);
                 diags.err1("ERR_69", &m, prop_loc);
                 return self.dbg_exit("parse_obj", false);
@@ -1116,10 +1128,12 @@ impl<'toks> Ast<'toks> {
             }
             self.tv.skip(); // consume ';'
 
-            if is_section {
-                section_seen = true;
-            } else {
-                file_seen = true;
+            match prop_name {
+                "section"         => section_seen = true,
+                "file"            => file_seen = true,
+                "file_exclude"    => file_exclude_seen = true,
+                "section_exclude" => section_exclude_seen = true,
+                _ => unreachable!(),
             }
         }
 

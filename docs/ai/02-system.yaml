@@ -71,6 +71,10 @@ pipeline:
     ERR_228: obj property const is not a string value
     ERR_229: obj property const is not defined
     ERR_232: evaluate_obj_props failure
+    ERR_233: obj glob pattern syntax error (flexiglob parse failure)
+    ERR_234: obj glob pattern references an unknown operator name
+    ERR_235: matched obj sections are not LMA-contiguous
+    ERR_236: obj file glob pattern matched no files
 
 extensions:
   api_crate: firmion_extension
@@ -167,12 +171,14 @@ language_features:
   wrbe8/wrbe16/.../wrbe64: write integer literals, big-endian
   wrs: write a string literal
   wrf: write a binary file
-  obj: top-level declaration binding a name to a section in an object file; syntax: obj name { section = "..."; file = "..."; }
-       Naming convention: the section inside an external object file is called "objsec"
-       in code (ObjProps.objsec, ObjSectionInfo.section_name) to avoid confusion with
-       Firmion's own Section construct. Never use the bare word "section" for ELF/object
-       file sections in identifiers or comments.
-  sizeof(obj_name): returns the byte size of the named obj section (resolved at IRDb validation time)
+  obj: top-level declaration binding a name to one or more ELF sections.
+       Syntax: obj name { section = "..."; file = "..."; }
+       Optional: file_exclude = "..."; section_exclude = "...";
+       All four fields accept flexiglob patterns (wildcards, SORT_BY_ALIGNMENT, SORT_BY_INIT_PRIORITY).
+       A literal path with no wildcards matches exactly one file, same as the pre-glob behavior.
+       ObjFileResolver in irdb/objfile.rs resolves each obj to Vec<ObjsecInfo>.
+       Matched sections must be LMA-contiguous after sorting (ERR_235).
+  sizeof(obj_name): returns packed_size of all matched sections (includes inter-section alignment padding)
   align: pad to alignment boundary
   set_addr / pad_addr_offset / pad_sec_offset / pad_file_offset: address control
   --max-output-size: CLI flag (default 256M); rejects images exceeding the limit before execute (ERR_224)

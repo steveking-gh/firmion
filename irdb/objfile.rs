@@ -1,22 +1,27 @@
 // Object file parsing and section resolution for firmion.
 //
-// This crate isolates all interaction with the `object` crate.  ObjsecProps
-// and the LMA-fill helpers are private implementation details.  The only public
-// surface is ObjFileResolver, which accepts a reference to the obj_props map
-// produced by const_eval and resolves individual obj sections on demand,
-// caching each parsed file so multi-section references to the same file pay
-// the I/O cost only once.
+// ObjFileResolver accepts the obj_props map from const_eval and resolves each
+// obj declaration to the ordered list of ObjsecInfo values that wrobj will
+// write.  File and section names are treated as flexiglob patterns, so a
+// literal path (no wildcards) behaves identically to the pre-glob single-file
+// form.  Pattern validation errors are reported as ERR_233 (syntax) or
+// ERR_234 (unknown operator).
+//
+// For each resolved obj the sections are sorted by the glob pipeline
+// (SORT_BY_ALIGNMENT, SORT_BY_INIT_PRIORITY, etc.) and packed contiguously
+// in that order; LMA continuity is validated as ERR_235.
 
 // Don't clutter upstream docs.rs for an otherwise private library.
 #![doc(hidden)]
 
 use diags::{Diags, SourceSpan};
+use flexiglob::{GlobOperator, GlobberBuilder, ParseErrorKind};
 use ir::{ObjProps, ObjsecInfo};
 use object::{Object, ObjectSection};
 use std::{collections::HashMap, fs};
 
-// Raw per-section data extracted from one parse of an object file.
-// lma starts as None; fill_lma populates it from PT_LOAD segments.
+// Raw section data extracted from one parse of an object file
+
 struct ObjsecProps {
     file_offset: u64,
     size: u64,
@@ -68,9 +73,64 @@ fn compute_lma_from_segments(
     }
 }
 
-/// Resolves obj sections on demand.  Holds a reference to the obj_props map
-/// from const_eval and a per-file parse cache so each object file is opened
-/// and parsed at most once regardless of how many obj declarations reference it.
+// ── Section candidates used as the flexiglob type parameter ───────────────────
+
+// Holds all data needed to build an ObjsecInfo plus the fields used by the
+// sorting operators.
+struct SectionCandidate {
+    name: String,
+    file: String,
+    file_offset: u64,
+    size: u64,
+    align: u64,
+    vma: u64,
+    lma: u64,
+}
+
+// ── Sorting operators ──────────────────────────────────────────────────────────
+
+struct SortByAlignmentOp;
+
+impl GlobOperator<SectionCandidate> for SortByAlignmentOp {
+    fn name(&self) -> &str { "SORT_BY_ALIGNMENT" }
+    fn apply(&self, candidates: &mut Vec<&SectionCandidate>) {
+        // Stable sort, descending alignment (largest alignment first).
+        candidates.sort_by(|a, b| b.align.cmp(&a.align));
+    }
+}
+
+struct SortByInitPriorityOp;
+
+impl GlobOperator<SectionCandidate> for SortByInitPriorityOp {
+    fn name(&self) -> &str { "SORT_BY_INIT_PRIORITY" }
+    fn apply(&self, candidates: &mut Vec<&SectionCandidate>) {
+        // Extract the trailing numeric suffix (e.g. ".init_array.00100" -> 100).
+        // Sections without a numeric suffix sort after those that have one.
+        candidates.sort_by_key(|c| init_priority(&c.name));
+    }
+}
+
+fn init_priority(name: &str) -> u64 {
+    name.rsplit('.').next()
+        .and_then(|s| s.parse::<u64>().ok())
+        .unwrap_or(u64::MAX)
+}
+
+// ── Glob error -> Firmion diagnostic ──────────────────────────────────────────
+
+fn emit_glob_error(e: &flexiglob::ParseError, src_loc: &SourceSpan, diags: &mut Diags) {
+    let code = if matches!(e.kind, ParseErrorKind::InvalidOperator(_)) {
+        "ERR_234"
+    } else {
+        "ERR_233"
+    };
+    diags.err1(code, &e.message, src_loc.clone());
+}
+
+// ── ObjFileResolver ────────────────────────────────────────────────────────────
+
+/// Resolves obj declarations to ordered lists of ObjsecInfo.
+/// Each file is parsed at most once; subsequent references use the cached result.
 pub struct ObjFileResolver<'a> {
     obj_props: &'a HashMap<String, ObjProps>,
     parsed: HashMap<String, HashMap<String, ObjsecProps>>,
@@ -84,8 +144,7 @@ impl<'a> ObjFileResolver<'a> {
         }
     }
 
-    // Parse file_path and insert its section map into self.parsed.
-    // Does nothing if the file is already cached.
+    // Parse file_path and cache its section map.  No-op if already cached.
     fn cache_file(
         &mut self,
         file_path: &str,
@@ -137,16 +196,14 @@ impl<'a> ObjFileResolver<'a> {
         true
     }
 
-    /// Resolve the named obj declaration to an ObjSectionInfo.
-    /// Parses the backing object file on first access; subsequent references to
-    /// the same file use the cached parse result.  Returns None and emits a
-    /// diagnostic on any failure.
+    /// Resolve the named obj declaration to an ordered list of ObjsecInfo.
+    /// Returns None and emits a diagnostic on any failure, including no matches.
     pub fn resolve(
         &mut self,
         obj_name: &str,
         use_loc: &SourceSpan,
         diags: &mut Diags,
-    ) -> Option<ObjsecInfo> {
+    ) -> Option<Vec<ObjsecInfo>> {
         let props = match self.obj_props.get(obj_name) {
             Some(p) => p,
             None => {
@@ -155,32 +212,142 @@ impl<'a> ObjFileResolver<'a> {
                 return None;
             }
         };
-        let file_path = props.file.clone();
-        let objsec_name = props.name.clone();
+
+        // Clone props fields needed after the mutable self borrows below.
+        let file_pat = props.file.clone();
+        let sec_pat  = props.name.clone();
+        let file_excl_pat = props.file_exclude.clone();
+        let sec_excl_pat  = props.section_exclude.clone();
         let decl_loc = props.src_loc.clone();
 
-        if !self.cache_file(&file_path, use_loc, &decl_loc, diags) {
+        // ── Step 1: expand file glob ───────────────────────────────────────────
+        let file_builder = GlobberBuilder::<String>::new();
+        let file_globber = match file_builder.compile(&file_pat) {
+            Ok(g) => g,
+            Err(ref e) => { emit_glob_error(e, &decl_loc, diags); return None; }
+        };
+        let matched_files = file_globber.run_fs();
+
+        // Apply file exclusion if specified.
+        let matched_files: Vec<String> = if file_excl_pat.is_empty() {
+            matched_files
+        } else {
+            let excl_builder = GlobberBuilder::<String>::new();
+            let excl_globber = match excl_builder.compile(&file_excl_pat) {
+                Ok(g) => g,
+                Err(ref e) => { emit_glob_error(e, &decl_loc, diags); return None; }
+            };
+            // Collect into owned set so the borrow of matched_files ends before into_iter().
+            let excluded: std::collections::HashSet<String> =
+                excl_globber.run(&matched_files, |s| s.as_str())
+                    .into_iter().cloned().collect();
+            matched_files.into_iter().filter(|f| !excluded.contains(f)).collect()
+        };
+
+        if matched_files.is_empty() {
+            let m = format!(
+                "obj '{}': file pattern '{}' matched no files.",
+                obj_name, file_pat
+            );
+            diags.err2("ERR_236", &m, use_loc.clone(), decl_loc.clone());
             return None;
         }
-        let objsec_map = self.parsed.get(&file_path).unwrap();
-        let Some(raw) = objsec_map.get(&objsec_name) else {
+
+        // ── Step 2: for each matched file, expand section glob ─────────────────
+        let sec_builder = GlobberBuilder::new()
+            .with_operator(SortByAlignmentOp)
+            .with_operator(SortByInitPriorityOp);
+        let sec_globber = match sec_builder.compile(&sec_pat) {
+            Ok(g) => g,
+            Err(ref e) => { emit_glob_error(e, &decl_loc, diags); return None; }
+        };
+        let sec_excl_globber_opt: Option<flexiglob::Globber<'_, SectionCandidate>> =
+            if sec_excl_pat.is_empty() {
+                None
+            } else {
+                match sec_builder.compile(&sec_excl_pat) {
+                    Ok(g) => Some(g),
+                    Err(ref e) => { emit_glob_error(e, &decl_loc, diags); return None; }
+                }
+            };
+
+        let mut all_infos: Vec<ObjsecInfo> = Vec::new();
+
+        for file_path in matched_files {
+            if !self.cache_file(&file_path, use_loc, &decl_loc, diags) {
+                return None;
+            }
+            let objsec_map = self.parsed.get(&file_path).unwrap();
+
+            // Build candidates from all sections that have file data.
+            let mut section_candidates: Vec<SectionCandidate> = objsec_map
+                .iter()
+                .map(|(name, raw)| SectionCandidate {
+                    name: name.clone(),
+                    file: file_path.clone(),
+                    file_offset: raw.file_offset,
+                    size: raw.size,
+                    align: raw.align,
+                    vma: raw.vma,
+                    lma: raw.lma.unwrap(),
+                })
+                .collect();
+            // Stable pre-sort by name so results are deterministic before operators run.
+            section_candidates.sort_by(|a, b| a.name.cmp(&b.name));
+
+            let mut matched_secs = sec_globber.run(&section_candidates, |c| c.name.as_str());
+
+            // Apply section exclusion if specified.
+            if let Some(ref excl_g) = sec_excl_globber_opt {
+                let excluded = excl_g.run(&section_candidates, |c| c.name.as_str());
+                let excl_names: std::collections::HashSet<&str> =
+                    excluded.iter().map(|c| c.name.as_str()).collect();
+                matched_secs.retain(|c| !excl_names.contains(c.name.as_str()));
+            }
+
+            for sec in matched_secs {
+                all_infos.push(ObjsecInfo {
+                    file: sec.file.clone(),
+                    name: sec.name.clone(),
+                    file_offset: sec.file_offset,
+                    size: sec.size,
+                    align: sec.align,
+                    vma: sec.vma,
+                    lma: sec.lma,
+                    src_loc: use_loc.clone(),
+                });
+            }
+        }
+
+        if all_infos.is_empty() {
             let m = format!(
-                "Objsec '{}' not found in '{}', or objsec has no file data \
-                 (e.g. zero-initialized sections cannot be copied).",
-                objsec_name, file_path
+                "Objsec pattern '{}' matched no sections in the matched files.",
+                sec_pat
             );
             diags.err2("ERR_119", &m, use_loc.clone(), decl_loc.clone());
             return None;
-        };
-        Some(ObjsecInfo {
-            file: file_path,
-            name: objsec_name,
-            file_offset: raw.file_offset,
-            size: raw.size,
-            align: raw.align,
-            vma: raw.vma,
-            lma: raw.lma.unwrap(),
-            src_loc: use_loc.clone(),
-        })
+        }
+
+        // ── Step 3: LMA continuity check (ERR_235) ────────────────────────────
+        // Adjacent sections must have contiguous LMA addresses to guarantee the
+        // packed output is a valid contiguous image slice.
+        for i in 1..all_infos.len() {
+            let prev = &all_infos[i - 1];
+            let curr = &all_infos[i];
+            if prev.lma + prev.size != curr.lma {
+                let m = format!(
+                    "obj '{}': LMA of section '{}' in '{}' ({:#X}) does not follow \
+                     section '{}' in '{}' ({:#X} + {} = {:#X}). \
+                     Sections must be LMA-contiguous.",
+                    obj_name,
+                    curr.name, curr.file, curr.lma,
+                    prev.name, prev.file, prev.lma, prev.size, prev.lma + prev.size,
+                );
+                diags.err1("ERR_235", &m, use_loc.clone());
+                return None;
+            }
+        }
+
+        Some(all_infos)
     }
 }

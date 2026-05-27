@@ -1,0 +1,9 @@
+// ".*" matches .data, .shstrtab, .text -- none are LMA-contiguous.
+obj allsecs {
+    section = ".*";
+    file    = "tests/glob_test.elf";
+}
+section out {
+    wr allsecs;
+}
+output out;

@@ -978,6 +978,74 @@ Changes:
 
 ---
 
+## 2026-05-21 -- flexiglob integration: glob patterns for obj file/section
+
+**flexiglob dependency**
+Added `flexiglob = { path = "../flexiglob" }` to workspace `[workspace.dependencies]`
+and `flexiglob = { workspace = true }` to `irdb/Cargo.toml`.
+
+**ObjProps extended**
+`ir/ir.rs` `ObjProps` gained two new fields: `file_exclude: String` and
+`section_exclude: String`.  `const_eval::evaluate_obj_props` populates them via
+`resolve_optional_obj_prop` (returns empty string when absent).  Both accept
+flexiglob patterns or literal strings.
+
+**irdb/objfile.rs rewritten**
+`ObjFileResolver` now accepts flexiglob patterns for all four fields.
+Key internals:
+
+- `SectionCandidate` -- local struct used as the `T` type parameter for `GlobOperator<T>`.
+- `SortByAlignmentOp` -- SORT_BY_ALIGNMENT operator; stable descending sort by `align`.
+- `SortByInitPriorityOp` -- SORT_BY_INIT_PRIORITY operator; sorts by trailing numeric suffix
+  (e.g. `.init_array.00100` -> 100; no suffix sorts last).
+- `enumerate_file_candidates(hint)` -- filesystem traversal driven by `scan_hint()`.
+- `ObjFileResolver::resolve()` returns `Option<Vec<ObjsecInfo>>` with three steps:
+  1. File glob + file_exclude; empty -> ERR_236.
+  2. Section glob with operators + section_exclude; empty -> ERR_119.
+  3. LMA continuity check -> ERR_235.
+
+**IRDb.objsecs type change**
+`objsecs: HashMap<String, ObjsecInfo>` changed to
+`objsecs: HashMap<String, Vec<ObjsecInfo>>`.
+All consumers updated: `validate_wrobj_operands`, `validate_obj_query_operands`,
+`iterate_wrobj`, `iterate_sizeof`, `iterate_obj_align/vma/lma`, `execute_wrobj`.
+obj_align/vma/lma queries use `infos[0]` (first matched section).
+
+**layout_phase::packed_size**
+New `pub fn packed_size(infos: &[ObjsecInfo]) -> u64` in `layout_phase.rs`.
+Computes total byte footprint with inter-section alignment padding, mirroring the
+byte sequence written by `execute_wrobj`.  Used by both layout_phase and exec_phase.
+
+**exec_phase::execute_wrobj**
+Rewrites from single-file to multi-section iteration.  Writes zero-fill alignment
+padding between sections; tracks cumulative `write_offset` for pad computation.
+
+**New error codes**
+ERR_233: glob pattern syntax error.
+ERR_234: unknown glob operator name.
+ERR_235: matched sections are not LMA-contiguous.
+ERR_236: file glob pattern matched no files (replaces ERR_118 for the "file not found"
+case -- a literal path that does not exist now emits ERR_236 via the "no matches"
+branch rather than an I/O error branch).
+
+**Tests**
+New ELF fixture: `tests/glob_test.elf` (ELF32 ARM, .text=4B align=4 VMA=0x1000,
+.data=8B align=8 VMA=0x2000, separate non-contiguous segments).
+6 new test fixtures + 6 integration tests covering:
+
+- literal section match + write bytes (`wrobj_glob_sec`)
+- ERR_235 multi-section LMA discontinuity (`wrobj_glob_err235`)
+- ERR_119 via section_exclude removing all matches (`wrobj_glob_sec_excl`)
+- ERR_236 via file_exclude removing all matches (`wrobj_glob_file_excl`)
+- ERR_233 bad glob syntax (`wrobj_glob_bad_syntax`)
+- ERR_234 unknown operator (`wrobj_glob_unknown_op`)
+
+`wrobj_bad_file` integration test updated: expects ERR_236 (was ERR_118).
+
+397 tests pass.
+
+---
+
 ## 2026-05-05 — Typed-lowering architecture integration
 
 **Const Evaluation as AST Walker**

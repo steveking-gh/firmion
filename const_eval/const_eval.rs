@@ -568,7 +568,7 @@ pub fn evaluate_regions(
     if ok { Some(bindings) } else { None }
 }
 
-/// Resolves obj block property values (file, objsec) against the symbol table.
+/// Resolves obj block property values against the symbol table.
 /// Returns a map of obj name -> ObjProps, or None on error.
 pub fn evaluate_obj_props(
     diags: &mut Diags,
@@ -582,8 +582,20 @@ pub fn evaluate_obj_props(
     for (obj_name, obj_decl) in &ast_db.obj_decls {
         let file    = resolve_obj_prop(obj_decl.nid, ast, "file",    obj_name, &obj_decl.src_loc, symbol_table, diags);
         let section = resolve_obj_prop(obj_decl.nid, ast, "section", obj_name, &obj_decl.src_loc, symbol_table, diags);
-        match (file, section) {
-            (Some(f), Some(s)) => { props.insert(obj_name.clone(), ObjProps { file: f, name: s, src_loc: obj_decl.src_loc.clone() }); }
+        // Optional properties: None signals resolution failure; Some(s) includes the empty string
+        // for absent properties.
+        let file_exclude    = resolve_optional_obj_prop(obj_decl.nid, ast, "file_exclude",    obj_name, &obj_decl.src_loc, symbol_table, diags);
+        let section_exclude = resolve_optional_obj_prop(obj_decl.nid, ast, "section_exclude", obj_name, &obj_decl.src_loc, symbol_table, diags);
+        match (file, section, file_exclude, section_exclude) {
+            (Some(f), Some(s), Some(fe), Some(se)) => {
+                props.insert(obj_name.clone(), ObjProps {
+                    file: f,
+                    name: s,
+                    file_exclude: fe,
+                    section_exclude: se,
+                    src_loc: obj_decl.src_loc.clone(),
+                });
+            }
             _ => ok = false,
         }
     }
@@ -611,7 +623,46 @@ fn resolve_obj_prop(
         })
         .next()
         .unwrap(); // parser guarantees both section and file are present
-    let val_tinfo = ast.get_tinfo(val_nid);
+    resolve_string_value(ast.get_tinfo(val_nid), obj_name, prop, src_loc, symbol_table, diags)
+}
+
+/// Resolves an optional obj property.  Returns `Some("")` if the property is
+/// absent, `Some(s)` if present and resolved, `None` if present but resolution
+/// failed (error already emitted).
+fn resolve_optional_obj_prop(
+    obj_nid: NodeId,
+    ast: &Ast,
+    prop: &str,
+    obj_name: &str,
+    src_loc: &diags::SourceSpan,
+    symbol_table: &mut SymbolTable,
+    diags: &mut Diags,
+) -> Option<String> {
+    let Some(val_nid) = ast
+        .children(obj_nid)
+        .filter_map(|prop_nid| {
+            let tinfo = ast.get_tinfo(prop_nid);
+            if tinfo.tok == LexToken::ObjProp && tinfo.val == prop {
+                ast.children(prop_nid).next()
+            } else {
+                None
+            }
+        })
+        .next()
+    else {
+        return Some(String::new()); // property absent -- no exclusion
+    };
+    resolve_string_value(ast.get_tinfo(val_nid), obj_name, prop, src_loc, symbol_table, diags)
+}
+
+fn resolve_string_value(
+    val_tinfo: &ast::TokenInfo<'_>,
+    obj_name: &str,
+    prop: &str,
+    src_loc: &diags::SourceSpan,
+    symbol_table: &mut SymbolTable,
+    diags: &mut Diags,
+) -> Option<String> {
     match val_tinfo.tok {
         LexToken::QuotedString => Some(
             val_tinfo.val

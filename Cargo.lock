@@ -331,6 +331,7 @@ dependencies = [
  "firmion-diags",
  "firmion-extension",
  "firmion-ir",
+ "flexiglob",
  "indextree",
  "object",
  "parse_int",
@@ -370,6 +371,10 @@ dependencies = [
  "serde_json",
  "tracing",
 ]
+
+[[package]]
+name = "flexiglob"
+version = "0.1.0"
 
 [[package]]
 name = "float-cmp"

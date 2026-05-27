@@ -3524,7 +3524,7 @@ mod tests {
     }
 
     #[test]
-    /// obj with a non-existent file path fails with ERR_118.
+    /// obj with a non-existent literal file path fails with ERR_118 (file not found).
     fn wrobj_bad_file() {
         assert_firmion_failure("tests/wrobj_bad_file.firm", &["[ERR_118]"]);
     }
@@ -3586,6 +3586,55 @@ mod tests {
     /// Integer const used as obj file path fails with ERR_228.
     fn wrobj_const_file_bad_type() {
         assert_firmion_failure("tests/wrobj_const_file_bad_type.firm", &["[ERR_228]"]);
+    }
+
+    // ── glob-pattern obj tests (glob_test.elf: .text=4B, .data=8B) ────────────
+
+    #[test]
+    /// Literal section pattern resolves one section and writes its exact bytes.
+    fn wrobj_glob_sec() {
+        let out = "tests_wrobj_glob_sec.firm.bin";
+        Command::cargo_bin("firmion")
+            .unwrap()
+            .arg("tests/wrobj_glob_sec.firm")
+            .arg("-o")
+            .arg(out)
+            .assert()
+            .success()
+            .stderr(predicates::str::is_empty());
+        let bytes = fs::read(out).unwrap();
+        assert_eq!(bytes, &[0xDE, 0xAD, 0xBE, 0xEF]);
+        fs::remove_file(out).unwrap();
+    }
+
+    #[test]
+    /// Wildcard section pattern matching multiple non-LMA-contiguous sections fails with ERR_235.
+    fn wrobj_glob_err235() {
+        assert_firmion_failure("tests/wrobj_glob_err235.firm", &["[ERR_235]"]);
+    }
+
+    #[test]
+    /// section_exclude that removes all matched sections fails with ERR_119.
+    fn wrobj_glob_sec_excl() {
+        assert_firmion_failure("tests/wrobj_glob_sec_excl.firm", &["[ERR_119]"]);
+    }
+
+    #[test]
+    /// file_exclude that removes the only matched file fails with ERR_236.
+    fn wrobj_glob_file_excl() {
+        assert_firmion_failure("tests/wrobj_glob_file_excl.firm", &["[ERR_236]"]);
+    }
+
+    #[test]
+    /// Syntactically invalid section glob pattern fails with ERR_233.
+    fn wrobj_glob_bad_syntax() {
+        assert_firmion_failure("tests/wrobj_glob_bad_syntax.firm", &["[ERR_233]"]);
+    }
+
+    #[test]
+    /// Section glob pattern with an unregistered operator name fails with ERR_234.
+    fn wrobj_glob_unknown_op() {
+        assert_firmion_failure("tests/wrobj_glob_unknown_op.firm", &["[ERR_234]"]);
     }
 
     #[test]

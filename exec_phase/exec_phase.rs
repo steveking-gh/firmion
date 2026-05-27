@@ -21,6 +21,7 @@ use ir::{DataType, IR, IRKind, ParameterValue};
 use irdb::IRDb;
 use layout_phase::locationdb::LocationDb;
 use layout_phase::mapdb::MapDb;
+use layout_phase::packed_size;
 use const_eval::ireval::{ParmValDb, evaluate_string_expr, execute_assert};
 use crate::output_buffer::OutputBuffer;
 use std::collections::{BTreeMap, HashMap};
@@ -222,44 +223,63 @@ impl ExecPhase {
         let obj_name = argvaldb.parms[ir.operands[0]].identifier_to_str().to_owned();
 
         // IRDb pre-validated this entry; unwrap is safe.
-        let info = irdb.objsecs.get(&obj_name).unwrap();
-        let file_path = info.file.clone();
+        let infos = irdb.objsecs.get(&obj_name).unwrap();
 
         let loc = &location_db.ir_locs[lid];
         let addr = loc.addr.addr_base + loc.addr.addr_offset;
-        if !Self::check_and_record_range(written_ranges, addr, info.size, ir.src_loc.clone(), diags)
-        {
+        if !Self::check_and_record_range(
+            written_ranges,
+            addr,
+            packed_size(infos),
+            ir.src_loc.clone(),
+            diags,
+        ) {
             return Err(anyhow!("Address overwrite detected"));
         }
 
-        let mut source_file = match File::open(file_path.as_str()) {
-            Ok(f) => f,
-            Err(err) => {
+        // Write each section in order, inserting zero-fill alignment padding.
+        let mut write_offset: u64 = 0;
+        for info in infos {
+            let align = info.align.max(1);
+            let aligned = (write_offset + align - 1) & !(align - 1);
+            let pad = (aligned - write_offset) as usize;
+            if pad > 0 {
+                output.append_zeros(pad);
+            }
+            write_offset = aligned;
+
+            let file_path = &info.file;
+            let mut source_file = match File::open(file_path.as_str()) {
+                Ok(f) => f,
+                Err(err) => {
+                    let msg = format!(
+                        "Opening object file '{file_path}' failed with OS error '{:?}'.",
+                        err.raw_os_error()
+                    );
+                    diags.err1("ERR_193", &msg, ir.src_loc.clone());
+                    return Err(anyhow!(err));
+                }
+            };
+
+            if let Err(err) = source_file.seek(SeekFrom::Start(info.file_offset)) {
                 let msg = format!(
-                    "Opening object file '{file_path}' failed with OS error '{:?}'.",
+                    "Seeking in object file '{file_path}' failed with OS error '{:?}'.",
                     err.raw_os_error()
                 );
-                diags.err1("ERR_193", &msg, ir.src_loc.clone());
+                diags.err1("ERR_194", &msg, ir.src_loc.clone());
                 return Err(anyhow!(err));
             }
-        };
 
-        if let Err(err) = source_file.seek(SeekFrom::Start(info.file_offset)) {
-            let msg = format!(
-                "Seeking in object file '{file_path}' failed with OS error '{:?}'.",
-                err.raw_os_error()
-            );
-            diags.err1("ERR_194", &msg, ir.src_loc.clone());
-            return Err(anyhow!(err));
-        }
+            if let Err(err) = output.append_from_file(&mut source_file, info.size) {
+                let msg = format!(
+                    "Reading object file '{file_path}' failed with OS error '{:?}'.",
+                    err.raw_os_error()
+                );
+                diags.err1("ERR_195", &msg, ir.src_loc.clone());
+                return Err(anyhow!(err));
+            }
 
-        if let Err(err) = output.append_from_file(&mut source_file, info.size) {
-            let msg = format!(
-                "Reading object file '{file_path}' failed with OS error '{:?}'.",
-                err.raw_os_error()
-            );
-            diags.err1("ERR_195", &msg, ir.src_loc.clone());
-            return Err(anyhow!(err));
+            write_offset += info.size;
         }
 
         Ok(())

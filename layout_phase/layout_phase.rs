@@ -22,7 +22,7 @@ use crate::locationdb::{AddressState, Location, LocationDb};
 
 use diags::Diags;
 use firmion_extension::extension_registry::ExtensionRegistry;
-use ir::{ConstBuiltins, DataType, EffectiveRegion, IR, IRKind, ParameterValue};
+use ir::{ConstBuiltins, DataType, EffectiveRegion, IR, IRKind, ObjsecInfo, ParameterValue};
 use irdb::IRDb;
 use const_eval::ireval::{ParmValDb, evaluate_string_expr};
 use irdb::regiondb::RegionDb;
@@ -30,6 +30,19 @@ use std::collections::HashSet;
 
 #[allow(unused_imports)]
 use tracing::{debug, error, info, trace, warn};
+
+/// Returns the total byte footprint of packing `infos` contiguously, respecting
+/// each section's declared alignment.  Mirrors the byte sequence written by
+/// exec_phase::execute_wrobj.
+pub fn packed_size(infos: &[ObjsecInfo]) -> u64 {
+    let mut offset: u64 = 0;
+    for sec in infos {
+        let align = sec.align.max(1);
+        offset = (offset + align - 1) & !(align - 1);
+        offset += sec.size;
+    }
+    offset
+}
 
 /// Tracks location state for one active section scope.
 /// All parent-scope state saved on section entry and restored on section exit.
@@ -248,8 +261,8 @@ impl LayoutPhase {
         current: &mut Location,
     ) -> bool {
         let obj_name = self.parms[ir.operands[0]].identifier_to_str().to_string();
-        let info = irdb.objsecs.get(&obj_name).unwrap();
-        current.advance(info.size, &ir.src_loc, diags)
+        let infos = irdb.objsecs.get(&obj_name).unwrap();
+        current.advance(packed_size(infos), &ir.src_loc, diags)
     }
 
     /// Compute the string representation of the expression.
@@ -820,9 +833,9 @@ impl LayoutPhase {
                 return true;
             }
 
-            // Obj path: size is fixed from the object file section.
-            if let Some(info) = irdb.objsecs.get(&sec_name) {
-                *self.parms[out_parm_num].to_u64_mut() = info.size;
+            // Obj path: size is the packed total of all matched sections.
+            if let Some(infos) = irdb.objsecs.get(&sec_name) {
+                *self.parms[out_parm_num].to_u64_mut() = packed_size(infos);
                 return true;
             }
 
@@ -874,7 +887,7 @@ impl LayoutPhase {
     fn iterate_obj_align(&mut self, ir: &IR, irdb: &IRDb) -> bool {
         assert!(ir.operands.len() == 2);
         let obj_name = self.parms[ir.operands[0]].identifier_to_str().to_string();
-        let info = irdb.objsecs.get(&obj_name).unwrap();
+        let info = &irdb.objsecs.get(&obj_name).unwrap()[0];
         *self.parms[ir.operands[1]].to_u64_mut() = info.align;
         true
     }
@@ -882,7 +895,7 @@ impl LayoutPhase {
     fn iterate_obj_vma(&mut self, ir: &IR, irdb: &IRDb) -> bool {
         assert!(ir.operands.len() == 2);
         let obj_name = self.parms[ir.operands[0]].identifier_to_str().to_string();
-        let info = irdb.objsecs.get(&obj_name).unwrap();
+        let info = &irdb.objsecs.get(&obj_name).unwrap()[0];
         *self.parms[ir.operands[1]].to_u64_mut() = info.vma;
         true
     }
@@ -890,7 +903,7 @@ impl LayoutPhase {
     fn iterate_obj_lma(&mut self, ir: &IR, irdb: &IRDb) -> bool {
         assert!(ir.operands.len() == 2);
         let obj_name = self.parms[ir.operands[0]].identifier_to_str().to_string();
-        let info = irdb.objsecs.get(&obj_name).unwrap();
+        let info = &irdb.objsecs.get(&obj_name).unwrap()[0];
         *self.parms[ir.operands[1]].to_u64_mut() = info.lma;
         true
     }

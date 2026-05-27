@@ -1,0 +1,8 @@
+obj bad {
+    section = "[unclosed";
+    file    = "tests/glob_test.elf";
+}
+section out {
+    wr bad;
+}
+output out;

@@ -68,9 +68,16 @@ crates:
     key_fns: [LayoutDb::new, record_r]
 
   irdb:
-    path: irdb/irdb.rs (approx)
-    role: Typed IR construction and validation
-    key_types: [IRDb, IRItem]
+    path: irdb/irdb.rs; irdb/objfile.rs
+    role: Typed IR construction and validation; obj glob resolution
+    key_types: [IRDb, IRItem, ObjFileResolver]
+    notes: >
+      objsecs: HashMap<String, Vec<ObjsecInfo>> -- keyed by obj declared name;
+      each entry holds all sections matched by the glob pipeline in sorted order.
+      ObjFileResolver (objfile.rs) resolves ObjProps to Vec<ObjsecInfo> via flexiglob.
+      Sections from each matched file are pre-sorted by name for determinism, then
+      passed through the operator pipeline (SORT_BY_ALIGNMENT, SORT_BY_INIT_PRIORITY).
+      LMA continuity is validated before the vec is stored (ERR_235).
 
   exec_phase:
     path: exec_phase/exec_phase.rs
@@ -161,7 +168,7 @@ binary:
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
 tests:
-  integration: tests/integration.rs   # 294 tests as of 2026-04-14
+  integration: tests/integration.rs   # 397 tests as of 2026-05-21
   fixtures: tests/*.firm             # ~267 .firm source fixtures
   helpers: [assert_firmion_success, assert_firmion_failure, assert_firmion_warning,
             assert_firmion_no_warning]

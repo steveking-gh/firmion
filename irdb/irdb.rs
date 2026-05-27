@@ -81,8 +81,10 @@ pub struct IRDb {
     pub region_props: HashMap<String, RegionProps>,
 
     /// Resolved object-file sections: key = declared obj name.
-    /// Populated during IRDb construction; consumed by layout_phase and exec_phase.
-    pub objsecs: HashMap<String, ObjsecInfo>,
+    /// Each Vec holds one entry per matched (file, section) pair, in the order
+    /// they will be written.  A literal (non-glob) obj always produces a
+    /// single-element Vec, preserving backward compatibility.
+    pub objsecs: HashMap<String, Vec<ObjsecInfo>>,
 }
 
 impl IRDb {
@@ -284,8 +286,8 @@ impl IRDb {
         if self.objsecs.contains_key(&obj_name) {
             return true;
         }
-        if let Some(info) = resolver.resolve(&obj_name, &ir.src_loc, diags) {
-            self.objsecs.insert(obj_name, info);
+        if let Some(infos) = resolver.resolve(&obj_name, &ir.src_loc, diags) {
+            self.objsecs.insert(obj_name, infos);
             true
         } else {
             false
@@ -293,6 +295,7 @@ impl IRDb {
     }
 
     // obj_align/obj_lma/obj_vma: [identifier, output]; resolve the obj section.
+    // For glob objs with multiple matches, these queries use the first matched section.
     fn validate_obj_query_operands(
         &mut self,
         ir: &IR,
@@ -307,8 +310,8 @@ impl IRDb {
         if self.objsecs.contains_key(&obj_name) {
             return true;
         }
-        if let Some(info) = resolver.resolve(&obj_name, &ir.src_loc, diags) {
-            self.objsecs.insert(obj_name, info);
+        if let Some(infos) = resolver.resolve(&obj_name, &ir.src_loc, diags) {
+            self.objsecs.insert(obj_name, infos);
             true
         } else {
             false

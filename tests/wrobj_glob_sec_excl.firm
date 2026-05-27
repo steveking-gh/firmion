@@ -1,0 +1,10 @@
+// section_exclude removes all matching sections -> ERR_119.
+obj nothing {
+    section         = ".*";
+    section_exclude = ".*";
+    file            = "tests/glob_test.elf";
+}
+section out {
+    wr nothing;
+}
+output out;

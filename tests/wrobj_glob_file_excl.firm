@@ -1,0 +1,10 @@
+// file_exclude removes the only matched file -> ERR_236.
+obj nothing {
+    file         = "tests/glob_test.elf";
+    file_exclude = "tests/glob_test.elf";
+    section      = ".text";
+}
+section out {
+    wr nothing;
+}
+output out;

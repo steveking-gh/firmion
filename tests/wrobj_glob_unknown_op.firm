@@ -1,0 +1,8 @@
+obj bad {
+    section = "SORT_BY_NONEXISTENT(.text)";
+    file    = "tests/glob_test.elf";
+}
+section out {
+    wr bad;
+}
+output out;

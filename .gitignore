@@ -7,3 +7,4 @@ engine/fix.py
 .claude/settings.local.json
 /tmp/
 .mcp.json
+*.dot

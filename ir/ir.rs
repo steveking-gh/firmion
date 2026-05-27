@@ -22,12 +22,16 @@ use diags::Diags;
 use diags::SourceSpan;
 use parse_int::parse;
 
-/// Resolved properties of an `obj` declaration: the ELF file path and the
-/// objsec name to extract from it.
+/// Resolved properties of an `obj` declaration.
+/// `file` and `name` are glob patterns; empty `file_exclude`/`section_exclude`
+/// means no exclusion.  A literal path with no wildcards behaves identically
+/// to the pre-glob single-file/single-section form.
 #[derive(Clone, Debug)]
 pub struct ObjProps {
     pub file: String,
     pub name: String,
+    pub file_exclude: String,
+    pub section_exclude: String,
     /// Source location of the `obj` declaration, for two-location diagnostics.
     pub src_loc: SourceSpan,
 }
