@@ -29,15 +29,15 @@ pub mod esp_checksum;
 
 /// Registers all compiled-in extensions into `registry`.
 /// Call once before compiling any Firmion scripts.
-pub fn register_all(registry: &mut ExtensionRegistry) {
+pub fn register_all(_registry: &mut ExtensionRegistry) {
     #[cfg(feature = "std-crc32c")]
-    crc32c::register(registry);
+    crc32c::register(_registry);
     #[cfg(feature = "std-sha256")]
-    sha256::register(registry);
+    sha256::register(_registry);
     #[cfg(feature = "std-md5")]
-    md5::register(registry);
+    md5::register(_registry);
     #[cfg(feature = "std-xor")]
-    xor::register(registry);
+    xor::register(_registry);
     #[cfg(feature = "std-esp-checksum")]
-    esp_checksum::register(registry);
+    esp_checksum::register(_registry);
 }
