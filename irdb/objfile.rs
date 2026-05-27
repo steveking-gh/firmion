@@ -254,9 +254,15 @@ impl<'a> ObjFileResolver<'a> {
         }
 
         // ── Step 2: for each matched file, expand section glob ─────────────────
-        let sec_builder = GlobberBuilder::new()
-            .with_operator(SortByAlignmentOp)
-            .with_operator(SortByInitPriorityOp);
+        let mut sec_builder = GlobberBuilder::new();
+        if let Err(ref e) = sec_builder.register_operator(SortByAlignmentOp) {
+            emit_glob_error(e, &decl_loc, diags);
+            return None;
+        }
+        if let Err(ref e) = sec_builder.register_operator(SortByInitPriorityOp) {
+            emit_glob_error(e, &decl_loc, diags);
+            return None;
+        }
         let sec_globber = match sec_builder.compile(&sec_pat) {
             Ok(g) => g,
             Err(ref e) => { emit_glob_error(e, &decl_loc, diags); return None; }
