@@ -1,0 +1,19 @@
+irdb/objfile.rs
+  s_862d6aa320261a::t_9fcfa6cf8ed364 98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "41f691e14a70e04f292c87527cbf9cf1895d8e18",
+  "prompts": {},
+  "sessions": {
+    "s_862d6aa320261a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "047666ac-a301-4d2c-84e0-4c090cbe46f2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Steve King <12994437+steveking-gh@users.noreply.github.com>"
+    }
+  }
+}
