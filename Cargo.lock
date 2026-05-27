@@ -375,6 +375,8 @@ dependencies = [
 [[package]]
 name = "flexiglob"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a43847c9ce0f4483a47715453890635dc7e697934fc2c121a4f7aca9bb80e55d"
 
 [[package]]
 name = "float-cmp"

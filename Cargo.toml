@@ -52,7 +52,7 @@ unsafe_code = "forbid"
 # Strip the firmion- prefix from package names.
 # The prefix only exists to prevent name collisions on crates.io.
 [workspace.dependencies]
-flexiglob = { path = "../flexiglob" }
+flexiglob = "0.1.0"
 
 ast = { package = "firmion-ast", path = "ast", version = "0.7.0" }
 
