@@ -20,7 +20,7 @@ especially useful when creating FLASH, ROM or other non-volatile memory images.
 - Write raw data, strings, and repeated values
 - Write hashes and checksums
 - Write offsets, addresses and sizes
-- Extract and write sections from ELF and other other object file formats
+- Full globbing support for reading ELF object files and object file sections
 - Copy external files into your output
 - Align and pad content
 - Use little or big-endian byte order
