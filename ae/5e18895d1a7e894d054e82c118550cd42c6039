@@ -1,0 +1,19 @@
+extensions/src/lib.rs
+  s_862d6aa320261a::t_0a302d94602d67 32,34,36,38,40,42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ae5e18895d1a7e894d054e82c118550cd42c6039",
+  "prompts": {},
+  "sessions": {
+    "s_862d6aa320261a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "047666ac-a301-4d2c-84e0-4c090cbe46f2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Steve King <12994437+steveking-gh@users.noreply.github.com>"
+    }
+  }
+}
