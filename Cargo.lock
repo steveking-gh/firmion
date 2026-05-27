@@ -234,7 +234,7 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "firmion"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "anyhow",
  "assert_cmd",
@@ -250,7 +250,7 @@ dependencies = [
 
 [[package]]
 name = "firmion-ast"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "anyhow",
  "firmion-diags",
@@ -260,7 +260,7 @@ dependencies = [
 
 [[package]]
 name = "firmion-const-eval"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "anyhow",
  "firmion-ast",
@@ -273,14 +273,14 @@ dependencies = [
 
 [[package]]
 name = "firmion-diags"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "ariadne",
 ]
 
 [[package]]
 name = "firmion-exec-phase"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "anyhow",
  "firmion-const-eval",
@@ -294,7 +294,7 @@ dependencies = [
 
 [[package]]
 name = "firmion-extension"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "tracing",
  "tracing-subscriber",
@@ -302,7 +302,7 @@ dependencies = [
 
 [[package]]
 name = "firmion-extensions"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "assert_cmd",
  "crc32c",
@@ -314,7 +314,7 @@ dependencies = [
 
 [[package]]
 name = "firmion-ir"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "firmion-diags",
  "parse_int",
@@ -323,7 +323,7 @@ dependencies = [
 
 [[package]]
 name = "firmion-irdb"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "anyhow",
  "firmion-ast",
@@ -340,7 +340,7 @@ dependencies = [
 
 [[package]]
 name = "firmion-layout-phase"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "anyhow",
  "firmion-ast",
@@ -355,7 +355,7 @@ dependencies = [
 
 [[package]]
 name = "firmion-process"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "anyhow",
  "firmion-ast",

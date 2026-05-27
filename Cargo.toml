@@ -38,10 +38,10 @@ members = [
 ]
 
 [workspace.package]
-version = "0.7.0"
+version = "0.8.0"
 authors = ["Steve King <sk@metrokings.com>"]
 edition = "2024"
-publish = false
+publish = true
 homepage = "https://github.com/steveking-gh/firmion"
 repository = "https://github.com/steveking-gh/firmion"
 license-file = "LICENSE.txt"
@@ -54,20 +54,16 @@ unsafe_code = "forbid"
 [workspace.dependencies]
 flexiglob = "0.1.0"
 
-ast = { package = "firmion-ast", path = "ast", version = "0.7.0" }
-
-const_eval = { package = "firmion-const-eval", path = "const_eval", version = "0.7.0" }
-
-diags = { package = "firmion-diags", path = "diags", version = "0.7.0" }
-exec_phase = { package = "firmion-exec-phase", path = "exec_phase", version = "0.7.0" }
-
-extensions = { package = "firmion-extensions", path = "extensions", version = "0.7.0" }
-firmion_extension = { package = "firmion-extension", path = "firmion_extension", version = "0.7.0" }
-ir = { package = "firmion-ir", path = "ir", version = "0.7.0" }
-irdb = { package = "firmion-irdb", path = "irdb", version = "0.7.0" }
-layout_phase = { package = "firmion-layout-phase", path = "layout_phase", version = "0.7.0" }
-
-process = { package = "firmion-process", path = "process", version = "0.7.0" }
+ast = { package = "firmion-ast", path = "ast", version = "0.8.0" }
+const_eval = { package = "firmion-const-eval", path = "const_eval", version = "0.8.0" }
+diags = { package = "firmion-diags", path = "diags", version = "0.8.0" }
+exec_phase = { package = "firmion-exec-phase", path = "exec_phase", version = "0.8.0" }
+extensions = { package = "firmion-extensions", path = "extensions", version = "0.8.0" }
+firmion_extension = { package = "firmion-extension", path = "firmion_extension", version = "0.8.0" }
+ir = { package = "firmion-ir", path = "ir", version = "0.8.0" }
+irdb = { package = "firmion-irdb", path = "irdb", version = "0.8.0" }
+layout_phase = { package = "firmion-layout-phase", path = "layout_phase", version = "0.8.0" }
+process = { package = "firmion-process", path = "process", version = "0.8.0" }
 
 [features]
 default = ["std-crc32c", "std-sha256", "std-md5", "std-xor", "std-esp-checksum"]
