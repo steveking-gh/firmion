@@ -1,0 +1,90 @@
+docs/ai/03-structure.yaml
+  s_862d6aa320261a::t_68f6404284bb09 71-80
+  s_862d6aa320261a::t_2d85552742d9a7 171
+irdb/irdb.rs
+  s_862d6aa320261a::t_b3710745e4dea4 84-87
+  s_862d6aa320261a::t_bf71cb01d6cd95 289-290,298,313-314
+tests/wrobj_glob_sec.firm
+  s_862d6aa320261a::t_9e6484b57bae24 1-8
+docs/ai/05-update-tracker.md
+  s_862d6aa320261a::t_f605bcbfa0cb1e 1035,1042
+  s_862d6aa320261a::t_9471a615852958 981-1034,1036-1041,1043-1048
+Cargo.toml
+  s_862d6aa320261a::t_17949270670a41 55-56
+  h_5b3f31968f5853 44
+tests/wrobj_glob_sec_excl.firm
+  s_862d6aa320261a::t_3426aff9feb4f3 1-10
+irdb/Cargo.toml
+  s_862d6aa320261a::t_9f528c5428982c 19
+docs/ai/02-system.yaml
+  s_862d6aa320261a::t_dbb7b3126307c3 174-181
+  s_862d6aa320261a::t_97548e69e6bf8a 74-77
+tests/integration.rs
+  s_862d6aa320261a::t_36afe8af63d663 3591-3639
+  s_862d6aa320261a::t_c5c994f61404fa 3527
+tests/wrobj_glob_unknown_op.firm
+  s_862d6aa320261a::t_63f6df1864bb71 1-8
+.claude/settings.json
+  s_862d6aa320261a::t_8e084cdf5f7d7a 5-6
+ast/ast.rs
+  s_862d6aa320261a::t_400e1cb910802b 1017-1026,1028-1030
+  s_862d6aa320261a::t_15c4c8576a207b 1053-1054,1070-1075,1078-1079,1087,1131-1136
+const_eval/const_eval.rs
+  s_862d6aa320261a::t_635f22dc9aaa69 571,585-598,626-665
+irdb/objfile.rs
+  s_862d6aa320261a::t_de240cc410b43f 224-225,235-236,240-244
+  s_862d6aa320261a::t_10c83c106b056c 276
+  s_862d6aa320261a::t_67a6b9f64a344c 310-311
+  s_862d6aa320261a::t_d4163442dd0861 229,232
+  s_862d6aa320261a::t_2faa5545a03601 106
+  s_862d6aa320261a::t_846e567494fd23 277,280
+  s_862d6aa320261a::t_8ab027bf8ca9b7 96
+  h_5b3f31968f5853 23
+  s_862d6aa320261a::t_87af506621deb5 3-12,18,24,76-95,97-105,107-133,147,199-200,206,215-220,223,226-228,231,233-234,237-239,245-251,255-275,278-279,281-309,312-322,324-325,329-351
+  s_862d6aa320261a::t_85cbc64ae80b4c 252
+layout_phase/layout_phase.rs
+  s_862d6aa320261a::t_aaf2ca46635417 37
+  s_862d6aa320261a::t_5f44b0d78d9478 264-265
+  s_862d6aa320261a::t_eeedf2a902b0c2 25
+  s_862d6aa320261a::t_7a196d8ebd4267 890,898,906
+  s_862d6aa320261a::t_0b723c1eac50c0 836-838
+  s_862d6aa320261a::t_5dec4439c8d2ad 34-36,38-46
+tests/wrobj_glob_err235.firm
+  s_862d6aa320261a::t_fb9a7b8d80b333 1-9
+tests/wrobj_glob_bad_syntax.firm
+  s_862d6aa320261a::t_d7cc2dc0ae2894 1-8
+exec_phase/exec_phase.rs
+  s_862d6aa320261a::t_b1df0cb50f5797 226,230-236,240-264,266,269,273-280,282
+  s_862d6aa320261a::t_af44212cd1411f 24
+docs/globj.md
+  s_862d6aa320261a::t_ae1c5afc0b1ba7 46
+  s_862d6aa320261a::t_451a373604f94b 72
+  s_862d6aa320261a::t_df35d4059e2220 1,4-5,11,15-45,47-49,55,57-66,76-92
+.gitignore
+  h_5b3f31968f5853 10
+tests/wrobj_glob_file_excl.firm
+  s_862d6aa320261a::t_a3fd2fb7004362 1-10
+ir/ir.rs
+  s_862d6aa320261a::t_1bb8a6b89b3b10 25-28,33-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "46910b57f7ae9820774e8dd6049d1d51d644f560",
+  "prompts": {},
+  "humans": {
+    "h_5b3f31968f5853": {
+      "author": "Steve King <12994437+steveking-gh@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_862d6aa320261a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "047666ac-a301-4d2c-84e0-4c090cbe46f2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Steve King <12994437+steveking-gh@users.noreply.github.com>"
+    }
+  }
+}
