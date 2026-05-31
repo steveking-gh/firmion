@@ -203,10 +203,10 @@ Produces output.bin containing the string `Hello World!\n`.
 
 A Firmion source file consists of one or more [section](#section) definitions
 and exactly one [output](#output-statement) statement. The output statement
-specifies the top-level [section](#section) that defines the output file.
-Starting from this top section, Firmion recursively evaluates each nested
-[section](#section) and command to produce the output file.  For example, we can
-define a [section](#section) with a write-string ([wrs](#write-string)) command:
+specifies the top-level section that defines the output file. Starting from this
+top section, Firmion recursively evaluates each nested section and its commands
+to produce the output file.  For example, we can define a section with a
+write-string ([wrs](#write-string)) command:
 
     section foo {        // Start a new section named 'foo'
         wrs "I'm foo";   // wrs writes a string into the section.
@@ -237,6 +237,54 @@ Produces `output.bin`:
     $ cat output.bin
     I'm bar
     I'm foo
+
+Users can also define [memory regions](#region) that describe hardware memory layout
+on the target platform.  Regions provide convenient overflow checking without
+the need for explicit [assert](#assert) statements.
+
+    region FLASH {
+        addr = 0xF000_000;  // Starting address of the region
+        size = 1M;          // Size of the region = 1MB
+        default_pad_byte = 0xFF;  // 0xFF is the region default, but shown for completeness.
+    }
+
+Exactly one [section](#section) can declare itself `in` a region.  We call this
+section the *bound section* of a region.  Of course, any nested section in the
+bound section is also in the region.
+
+    section boot_section { ... }
+    section runtime_section { ... }
+
+    section firmware_top in FLASH {
+        wr boot_section;
+        wr runtime_section;
+    }
+
+To provide fine grain bounds control, you can even nest sections that are *also in
+their own region*.  Firmion internally understands this creates a region
+intersection and applies the constraints of *all* parent regions.
+
+    // Total FLASH space
+    region FLASH {
+        addr = 0xF000_000;  // Starting address of the region
+        size = 1M;          // Size of the region = 1MB
+        default_pad_byte = 0xFF;  // 0xFF is the region default, but shown for completeness.
+    }
+
+    // FLASH space reserved for boot loader
+    region BOOT_FLASH {
+        addr = 0xF000_000;  // Starting address of the region
+        size = 64K;         // Size of boot reserved area is 64KB
+    }
+
+    section boot_section in BOOT_FLASH { ... }
+    section runtime_section { ... }
+
+    section firmware_top in FLASH {
+        wr boot_section;  // Nested section with its own region carve-out
+        pad_sec_offset(sizeof(BOOT_FLASH));  // pad to keep runtime out of reserved boot area
+        wr runtime_section;
+    }
 
 Users can extend Firmion with custom data processing using [Firmion
 extensions](#firmion-extensions).  Users write the output of their extension
