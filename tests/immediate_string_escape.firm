@@ -1,0 +1,18 @@
+section out {
+    wrs "a\nb";
+    wr8 0xFF;
+    wrs "a\rb";
+    wr8 0xFF;
+    wrs "a\tb";
+    wr8 0xFF;
+    wrs "a\0b";
+    wr8 0xFF;
+    wrs "a\"b";
+    wr8 0xFF;
+    wrs "a\\b";
+    wr8 0xFF;
+    wrs "a\\nb";
+    wr8 0xFF;
+    wrs "C:\Users";
+}
+output out;

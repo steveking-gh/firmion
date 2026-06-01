@@ -120,9 +120,9 @@ pub fn eval_expr_tree(
                 .strip_prefix('"')
                 .unwrap_or(tinfo.val)
                 .strip_suffix('"')
-                .unwrap_or(tinfo.val)
-                .to_string();
-            Some(ParameterValue::QuotedString(trimmed))
+                .unwrap_or(tinfo.val);
+            let unescaped = ir::unescape_string(trimmed);
+            Some(ParameterValue::QuotedString(unescaped))
         }
         LexToken::Identifier => {
             let name = tinfo.val.to_string();
@@ -665,12 +665,13 @@ fn resolve_string_value(
 ) -> Option<String> {
     match val_tinfo.tok {
         LexToken::QuotedString => Some(
-            val_tinfo.val
-                .strip_prefix('"')
-                .unwrap_or("")
-                .strip_suffix('"')
-                .unwrap_or("")
-                .to_string(),
+            ir::unescape_string(
+                val_tinfo.val
+                    .strip_prefix('"')
+                    .unwrap_or("")
+                    .strip_suffix('"')
+                    .unwrap_or("")
+            ),
         ),
         LexToken::Identifier => {
             let name = val_tinfo.val;

@@ -8,6 +8,10 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.8.x pending]
 
+- FIXED: Panic on non-ELF object file.
+- FIXED: `const` string escapes no work correctly
+- FIXED: Fixed double-backslash string escapes
+- INTERNAL: Added unit tests for mach-o, Windows PE and WASM object formats
 - README: Added region example to basic structure section.
 
 ## [0.8.0]

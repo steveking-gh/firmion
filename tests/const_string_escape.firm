@@ -1,0 +1,27 @@
+const S_NL = "a\nb";
+const S_CR = "a\rb";
+const S_TAB = "a\tb";
+const S_NUL = "a\0b";
+const S_QT = "a\"b";
+const S_BS = "a\\b";
+const S_BSN = "a\\nb";
+const S_WIN = "C:\Users";
+
+section out {
+    wrs S_NL;
+    wr8 0xFF;
+    wrs S_CR;
+    wr8 0xFF;
+    wrs S_TAB;
+    wr8 0xFF;
+    wrs S_NUL;
+    wr8 0xFF;
+    wrs S_QT;
+    wr8 0xFF;
+    wrs S_BS;
+    wr8 0xFF;
+    wrs S_BSN;
+    wr8 0xFF;
+    wrs S_WIN;
+}
+output out;

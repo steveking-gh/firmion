@@ -368,6 +368,51 @@ pub fn strip_kmg(s: &str) -> (&str, u64) {
     }
 }
 
+pub fn unescape_string(s: &str) -> String {
+    let mut result = String::with_capacity(s.len());
+    let mut chars = s.chars().peekable();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            if let Some(&next_c) = chars.peek() {
+                match next_c {
+                    '\\' => {
+                        result.push('\\');
+                        chars.next();
+                    }
+                    '"' => {
+                        result.push('"');
+                        chars.next();
+                    }
+                    'n' => {
+                        result.push('\n');
+                        chars.next();
+                    }
+                    'r' => {
+                        result.push('\r');
+                        chars.next();
+                    }
+                    't' => {
+                        result.push('\t');
+                        chars.next();
+                    }
+                    '0' => {
+                        result.push('\0');
+                        chars.next();
+                    }
+                    _ => {
+                        result.push('\\');
+                    }
+                }
+            } else {
+                result.push('\\');
+            }
+        } else {
+            result.push(c);
+        }
+    }
+    result
+}
+
 #[derive(Debug)]
 pub struct IROperand {
     /// The linear ID of the IR instruction whose output this operand carries,
@@ -436,16 +481,11 @@ impl IROperand {
                 // Trim quotes and convert escape characters
                 // For trimming, don't use trim_matches since that
                 // will incorrectly strip trailing escaped quotes.
-                return Some(ParameterValue::QuotedString(
-                    sval.strip_prefix('\"')
-                        .unwrap()
-                        .strip_suffix('\"')
-                        .unwrap()
-                        .replace("\\\"", "\"")
-                        .replace("\\n", "\n")
-                        .replace("\\0", "\0")
-                        .replace("\\t", "\t"),
-                ));
+                let raw_content = sval.strip_prefix('\"')
+                    .unwrap()
+                    .strip_suffix('\"')
+                    .unwrap();
+                return Some(ParameterValue::QuotedString(unescape_string(raw_content)));
             }
             DataType::Extension => {
                 return Some(ParameterValue::Extension);
@@ -600,5 +640,36 @@ mod tests {
         assert_eq!(b.firmion_version_major, 0);
         assert_eq!(b.firmion_version_minor, 0);
         assert_eq!(b.firmion_version_patch, 0);
+    }
+
+    #[test]
+    fn test_unescape_string_basic() {
+        use super::unescape_string;
+        assert_eq!(unescape_string("hello"), "hello");
+        assert_eq!(unescape_string("hello\\nworld"), "hello\nworld");
+        assert_eq!(unescape_string("hello\\tworld"), "hello\tworld");
+        assert_eq!(unescape_string("hello\\rworld"), "hello\rworld");
+        assert_eq!(unescape_string("hello\\0world"), "hello\0world");
+        assert_eq!(unescape_string("quote\\\"here"), "quote\"here");
+    }
+
+    #[test]
+    fn test_unescape_string_escaped_backslash() {
+        use super::unescape_string;
+        // Input: "\\" -> Output: "\"
+        assert_eq!(unescape_string("\\\\"), "\\");
+        
+        // Input: "\\n" -> Output: "\n" (literal backslash + 'n')
+        assert_eq!(unescape_string("\\\\n"), "\\n");
+        
+        // Input: "\\\\n" -> Output: "\\n" (two literal backslashes + 'n')
+        assert_eq!(unescape_string("\\\\\\\\n"), "\\\\n");
+    }
+
+    #[test]
+    fn test_unescape_string_unrecognized_escape() {
+        use super::unescape_string;
+        // Path on Windows "C:\Users" -> unrecognized \U should be kept as literal backslash + U
+        assert_eq!(unescape_string("C:\\Users"), "C:\\Users");
     }
 }

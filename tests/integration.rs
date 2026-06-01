@@ -3887,4 +3887,48 @@ mod tests {
     fn region_default_pad_byte_dup() {
         assert_firmion_failure("tests/region_default_pad_byte_dup.firm", &["ERR_41"]);
     }
+
+    #[test]
+    fn string_escapes_consistent() {
+        let out_const = "tests_const_string_escape.bin";
+        let out_imm = "tests_immediate_string_escape.bin";
+        
+        Command::cargo_bin("firmion")
+            .unwrap()
+            .arg("tests/const_string_escape.firm")
+            .arg("-o")
+            .arg(out_const)
+            .assert()
+            .success();
+            
+        Command::cargo_bin("firmion")
+            .unwrap()
+            .arg("tests/immediate_string_escape.firm")
+            .arg("-o")
+            .arg(out_imm)
+            .assert()
+            .success();
+            
+        let bytes_const = fs::read(out_const).unwrap();
+        let bytes_imm = fs::read(out_imm).unwrap();
+        
+        // Assert they produce identical outputs
+        assert_eq!(bytes_const, bytes_imm);
+        
+        // Assert the exact byte content is correct
+        let expected = vec![
+            b'a', 0x0A, b'b', 0xFF, // a\nb
+            b'a', 0x0D, b'b', 0xFF, // a\rb
+            b'a', 0x09, b'b', 0xFF, // a\tb
+            b'a', 0x00, b'b', 0xFF, // a\0b
+            b'a', b'"', b'b', 0xFF, // a\"b
+            b'a', b'\\', b'b', 0xFF, // a\\b
+            b'a', b'\\', b'n', b'b', 0xFF, // a\\nb
+            b'C', b':', b'\\', b'U', b's', b'e', b'r', b's' // C:\Users (unrecognized escape \U preserved as is)
+        ];
+        assert_eq!(bytes_const, expected);
+        
+        fs::remove_file(out_const).ok();
+        fs::remove_file(out_imm).ok();
+    }
 } // mod tests
