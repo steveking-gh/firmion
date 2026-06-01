@@ -45,13 +45,17 @@ fn fill_lma<Elf>(
         }
         let seg_vma: u64 = phdr.p_vaddr(endian).into();
         let seg_pma: u64 = phdr.p_paddr(endian).into();
-        let seg_end: u64 = seg_vma + Into::<u64>::into(phdr.p_memsz(endian));
+        let Some(seg_end) = seg_vma.checked_add(Into::<u64>::into(phdr.p_memsz(endian))) else {
+            continue;
+        };
         for props in objsec_map.values_mut() {
             if props.lma.is_some() {
                 continue;
             }
             if props.vma >= seg_vma && props.vma < seg_end {
-                props.lma = Some(seg_pma + (props.vma - seg_vma));
+                if let Some(lma) = seg_pma.checked_add(props.vma - seg_vma) {
+                    props.lma = Some(lma);
+                }
             }
         }
     }

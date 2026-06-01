@@ -85,7 +85,10 @@ impl FirmionExtension for EspChecksum {
         let mut pos = offset;
 
         for seg in 0..seg_count {
-            if pos + 8 > img.len() {
+            let Some(header_end) = pos.checked_add(8) else {
+                return Err("std::esp_checksum: offset overflow".to_string());
+            };
+            if header_end > img.len() {
                 return Err(format!(
                     "std::esp_checksum: segment {seg} header at offset {pos} extends past end of image"
                 ));
@@ -93,16 +96,19 @@ impl FirmionExtension for EspChecksum {
             let payload_len =
                 u32::from_le_bytes([img[pos + 4], img[pos + 5], img[pos + 6], img[pos + 7]])
                     as usize;
-            pos += 8;
-            if pos + payload_len > img.len() {
+            pos = header_end;
+            let Some(payload_end) = pos.checked_add(payload_len) else {
+                return Err("std::esp_checksum: payload length overflow".to_string());
+            };
+            if payload_end > img.len() {
                 return Err(format!(
                     "std::esp_checksum: segment {seg} payload at offset {pos} extends past end of image"
                 ));
             }
-            for &b in &img[pos..pos + payload_len] {
+            for &b in &img[pos..payload_end] {
                 checksum ^= b;
             }
-            pos += payload_len;
+            pos = payload_end;
         }
 
         out_buffer[0] = checksum;
@@ -114,4 +120,78 @@ impl FirmionExtension for EspChecksum {
 /// Call once during process startup, before compiling any scripts.
 pub fn register(registry: &mut ExtensionRegistry) {
     registry.register(Box::new(EspChecksum));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_esp_checksum_valid() {
+        let extension = EspChecksum;
+        let mut out_buffer = [0u8; 1];
+        // 1 segment, magic = 0xE9, seg_count = 1
+        // segment header: load addr = [0, 0, 0, 0], size = [2, 0, 0, 0] (2 bytes)
+        // payload: [0xAA, 0xBB]
+        // offset = 8
+        let img = vec![
+            0xE9, 1, 0, 0, 0, 0, 0, 0, // file header
+            0, 0, 0, 0, 2, 0, 0, 0,    // segment header: size = 2
+            0xAA, 0xBB,                // payload
+        ];
+        let args = vec![
+            ParamArg::Slice { data: &img },
+            ParamArg::Int(8),
+        ];
+        let res = extension.execute(&args, &mut out_buffer);
+        assert!(res.is_ok());
+        // checksum = 0xEF ^ 0xAA ^ 0xBB = 0xFE
+        assert_eq!(out_buffer[0], 0xFE);
+    }
+
+    #[test]
+    fn test_esp_checksum_offset_overflow() {
+        let extension = EspChecksum;
+        let mut out_buffer = [0u8; 1];
+        let img = vec![0xE9, 1, 0, 0];
+        let args = vec![
+            ParamArg::Slice { data: &img },
+            ParamArg::Int(usize::MAX as u64),
+        ];
+        let res = extension.execute(&args, &mut out_buffer);
+        assert!(res.is_err());
+        assert!(res.unwrap_err().contains("offset overflow"));
+    }
+
+    #[test]
+    fn test_esp_checksum_header_extends_past() {
+        let extension = EspChecksum;
+        let mut out_buffer = [0u8; 1];
+        let img = vec![0xE9, 1, 0, 0];
+        let args = vec![
+            ParamArg::Slice { data: &img },
+            ParamArg::Int(2),
+        ];
+        let res = extension.execute(&args, &mut out_buffer);
+        assert!(res.is_err());
+        assert!(res.unwrap_err().contains("extends past end of image"));
+    }
+
+    #[test]
+    fn test_esp_checksum_payload_extends_past() {
+        let extension = EspChecksum;
+        let mut out_buffer = [0u8; 1];
+        // 1 segment, size = 100 bytes (extends past end of image)
+        let img = vec![
+            0xE9, 1, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 100, 0, 0, 0,
+        ];
+        let args = vec![
+            ParamArg::Slice { data: &img },
+            ParamArg::Int(8),
+        ];
+        let res = extension.execute(&args, &mut out_buffer);
+        assert!(res.is_err());
+        assert!(res.unwrap_err().contains("extends past end of image"));
+    }
 }

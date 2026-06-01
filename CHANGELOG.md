@@ -13,9 +13,11 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - FIXED: Report error on shift amounts greater than width
 - FIXED: Unify out-of-range shift behavior between const and layout phases
 - FIXED: Fixed double-backslash string escapes
+- FIXED: Used check arithmetic on values read from an obj file
 - INTERNAL: Added unit tests for mach-o, Windows PE and WASM object formats
 - INTERNAL: Added paranoid bounds checking on extension slice
 - README: Added region example to basic structure section.
+- README: Clarified zero-filling before extension execution.
 
 ## [0.8.0]
 
