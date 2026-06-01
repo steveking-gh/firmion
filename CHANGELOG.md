@@ -16,6 +16,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - FIXED: Used check arithmetic on values read from an obj file
 - INTERNAL: Added unit tests for mach-o, Windows PE and WASM object formats
 - INTERNAL: Added paranoid bounds checking on extension slice
+- INTERNAL: Eliminate code duplication with unified binary operations
 - README: Added region example to basic structure section.
 - README: Clarified zero-filling before extension execution.
 

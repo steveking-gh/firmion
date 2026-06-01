@@ -68,14 +68,7 @@ pub struct LayoutPhase {
     warned_lids: HashSet<(usize, &'static str)>,
 }
 
-fn get_wrx_byte_width(ir: &IR) -> usize {
-    match ir.kind {
-        IRKind::Wr(w, _) => w as usize,
-        bad => {
-            panic!("Called get_wrx_byte_width with {:?}", bad);
-        }
-    }
-}
+
 
 impl LayoutPhase {
     /// Debug trace that produces an indented output with section name to make
@@ -149,7 +142,7 @@ impl LayoutPhase {
         current: &mut Location,
     ) -> bool {
         assert!(ir.operands.len() < 3);
-        let byte_size = get_wrx_byte_width(ir) as u64;
+        let byte_size = ir.get_wrx_byte_width() as u64;
 
         self.trace(format_args!(
             "LayoutPhase::iterate_wrx-{}: {}",

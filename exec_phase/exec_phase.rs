@@ -33,12 +33,7 @@ use tracing::{debug, error, info, trace, warn};
 
 type WrittenRanges = BTreeMap<u64, (u64, SourceSpan)>;
 
-fn get_wrx_byte_width(ir: &IR) -> usize {
-    match ir.kind {
-        IRKind::Wr(w, _) => w as usize,
-        bad => panic!("Called get_wrx_byte_width with {:?}", bad),
-    }
-}
+
 
 pub struct ExecPhase {}
 
@@ -295,7 +290,7 @@ impl ExecPhase {
         output: &mut OutputBuffer,
     ) -> Result<()> {
         trace!("{}", format!("Engine::execute_wrx: {:?}", ir.kind).as_str());
-        let byte_size = get_wrx_byte_width(ir);
+        let byte_size = ir.get_wrx_byte_width();
 
         let opnd_num = ir.operands[0];
         trace!(

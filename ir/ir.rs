@@ -655,6 +655,15 @@ pub struct IR {
     pub src_loc: SourceSpan,
 }
 
+impl IR {
+    pub fn get_wrx_byte_width(&self) -> usize {
+        match self.kind {
+            IRKind::Wr(w, _) => w as usize,
+            bad => panic!("Called get_wrx_byte_width with {:?}", bad),
+        }
+    }
+}
+
 /// All compile-time constants exposed as Firmion built-in variables.
 ///
 /// Call `ConstBuiltins::init()` once at process startup before any built-in
