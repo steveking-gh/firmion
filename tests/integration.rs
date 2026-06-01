@@ -3688,6 +3688,63 @@ mod tests {
     fn obj_lma_non_elf() {
         assert_firmion_failure("tests/obj_lma_non_elf.firm", &["[ERR_120]"]);
     }
+
+    #[test]
+    fn wrobj_elf() {
+        let out = "tests_wrobj_elf.firm.bin";
+        Command::cargo_bin("firmion")
+            .unwrap()
+            .arg("tests/wrobj_elf.firm")
+            .arg("-o")
+            .arg(out)
+            .assert()
+            .success()
+            .stderr(predicates::str::is_empty());
+        fs::remove_file(out).unwrap();
+    }
+
+    #[test]
+    fn wrobj_macho() {
+        let out = "tests_wrobj_macho.firm.bin";
+        Command::cargo_bin("firmion")
+            .unwrap()
+            .arg("tests/wrobj_macho.firm")
+            .arg("-o")
+            .arg(out)
+            .assert()
+            .success()
+            .stderr(predicates::str::is_empty());
+        fs::remove_file(out).unwrap();
+    }
+
+    #[test]
+    fn wrobj_pe() {
+        let out = "tests_wrobj_pe.firm.bin";
+        Command::cargo_bin("firmion")
+            .unwrap()
+            .arg("tests/wrobj_pe.firm")
+            .arg("-o")
+            .arg(out)
+            .assert()
+            .success()
+            .stderr(predicates::str::is_empty());
+        fs::remove_file(out).unwrap();
+    }
+
+    #[test]
+    fn wrobj_wasm() {
+        let out = "tests_wrobj_wasm.firm.bin";
+        Command::cargo_bin("firmion")
+            .unwrap()
+            .arg("tests/wrobj_wasm.firm")
+            .arg("-o")
+            .arg(out)
+            .assert()
+            .success()
+            .stderr(predicates::str::is_empty());
+        fs::remove_file(out).unwrap();
+    }
+
     /// Trace does not fire without -v; stdout is empty.
     #[test]
     fn trace_silent_1() {

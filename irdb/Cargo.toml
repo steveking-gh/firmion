@@ -21,7 +21,7 @@ firmion_extension = { workspace = true }
 indextree = "4.3.1"
 ir = { workspace = true }
 ast = { workspace = true }
-object = { version = "0.36", default-features = false, features = ["read", "elf"] }
+object = { version = "0.36", default-features = false, features = ["read", "elf", "pe", "coff", "macho", "wasm", "xcoff"] }
 
 const_eval = { workspace = true }
 

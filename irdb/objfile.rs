@@ -55,11 +55,6 @@ fn fill_lma<Elf>(
             }
         }
     }
-    for props in objsec_map.values_mut() {
-        if props.lma.is_none() {
-            props.lma = Some(props.vma);
-        }
-    }
 }
 
 fn compute_lma_from_segments(
@@ -70,6 +65,11 @@ fn compute_lma_from_segments(
         object::File::Elf32(elf) => fill_lma(elf, objsec_map),
         object::File::Elf64(elf) => fill_lma(elf, objsec_map),
         _ => {}
+    }
+    for props in objsec_map.values_mut() {
+        if props.lma.is_none() {
+            props.lma = Some(props.vma);
+        }
     }
 }
 
@@ -357,3 +357,4 @@ impl<'a> ObjFileResolver<'a> {
         Some(all_infos)
     }
 }
+

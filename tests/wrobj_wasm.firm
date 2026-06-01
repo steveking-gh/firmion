@@ -1,0 +1,12 @@
+obj code {
+    section = "<code>";
+    file    = "tests/test_wasm.o";
+}
+section out {
+    assert obj_lma(code) == 0;
+    assert obj_vma(code) == 0;
+    assert obj_align(code) == 1;
+    wr code;
+    assert sizeof(code) == 151;
+}
+output out;

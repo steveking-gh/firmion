@@ -7,6 +7,7 @@ and this project adheres to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.8.x pending]
+
 - README: Added region example to basic structure section.
 
 ## [0.8.0]

@@ -1,0 +1,12 @@
+obj code {
+    section = ".text";
+    file    = "tests/test.o";
+}
+section out {
+    assert obj_lma(code) == 0;
+    assert obj_vma(code) == 0;
+    assert obj_align(code) == 16;
+    wr code;
+    assert sizeof(code) == 18;
+}
+output out;
