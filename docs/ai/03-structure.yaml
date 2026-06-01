@@ -86,8 +86,8 @@ crates:
     key_fns: [ExecPhase::execute, execute_core_operations, execute_extensions]
     notes: >
       execute_core_operations writes Wr/Wrs/Wrf bytes and pre-pads zeroed
-      space for extension output regions.  execute_extensions memory-maps the
-      file and patches each extension's output in place.  Assert instructions
+      space for extension output regions.  execute_extensions runs extensions over
+      an in-memory OutputBuffer and patches each extension's output in place.  Assert instructions
       are skipped here; validation runs in validation_phase before exec.
 
   validation_phase:

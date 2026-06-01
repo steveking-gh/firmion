@@ -502,23 +502,24 @@ impl ExecPhase {
 
             // Build the ParamArg list and call the extension.
             //
-            // All extension calls use IRKind::ExtensionCall with operand layout:
-            //   [name, user_arg0..., output]
+            // All extension calls use IRKind::ExtensionCall with operand
+            //   layout: [name, user_arg0..., output]
             //
             // The trailing output operand is a type-checking placeholder and
             // must not be passed to the extension.  last = len-1 excludes it.
             //
             // The engine resolves Slice params to ParamArg::Slice and passes
-            // remaining params as ParamArg::Int or ParamArg::Str.  Operands arrive in
-            // declaration order (irdb canonicalized them).
+            // remaining params as ParamArg::Int or ParamArg::Str.  Operands
+            // arrive in declaration order (irdb canonicalized them).
             //
-            // ParamArg::Slice holds &mmap[..], an immutable borrow.  Pre-resolve
-            // all section lookups before that scope so error handling can use `continue`.
+            // ParamArg::Slice holds a slice of the output buffer, an immutable
+            // borrow.  Pre-resolve all section lookups before that scope so
+            // error handling can use `continue`.
             let cached_params = &entry.cached_params;
 
             // Per-param section resolutions, indexed parallel to cached_params.
-            // Each entry is Some((file_offset, size, slice_start, slice_end)) for
-            // Slice params, or None for Int/Str params.
+            // Each entry is Some((file_offset, size, slice_start, slice_end))
+            // for Slice params, or None for Int/Str params.
             let mut resolved_sections: Vec<Option<(u64, u64, usize, usize)>> = Vec::new();
             let mut section_resolve_failed = false;
 
@@ -587,9 +588,10 @@ impl ExecPhase {
                 continue;
             }
 
-            // Build ext_args in a scope that isolates the immutable mmap borrow
-            // held by ParamArg::Slice.  The scope produces only an owned Vec<u8>,
-            // so the borrow drops before the mutable patch write below.
+            // Build ext_args in a scope that isolates the immutable output
+            // buffer borrow held by ParamArg::Slice.  The scope produces only
+            // an owned Vec<u8>, so the borrow drops before the mutable patch
+            // write below.
             let exec_result: Result<Vec<u8>, String> = {
                 let mut ext_args: Vec<ParamArg<'_>> = Vec::new();
 
