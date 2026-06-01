@@ -441,6 +441,65 @@ pub fn check_shr_i64(in0: i64, in1: i64) -> Result<i64, String> {
     Ok(in0 >> in1)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BinOpKind {
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Mod,
+    Shl,
+    Shr,
+    BitAnd,
+    BitOr,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum BinOpError {
+    Overflow(String),
+    DivByZero,
+}
+
+pub fn checked_binop_u64(op: BinOpKind, a: u64, b: u64) -> Result<u64, BinOpError> {
+    match op {
+        BinOpKind::Add => a.checked_add(b).ok_or_else(|| {
+            BinOpError::Overflow(format!("Add expression '{a} + {b}' will overflow type U64"))
+        }),
+        BinOpKind::Sub => a.checked_sub(b).ok_or_else(|| {
+            BinOpError::Overflow(format!("Subtract expression '{a} - {b}' will underflow type U64"))
+        }),
+        BinOpKind::Mul => a.checked_mul(b).ok_or_else(|| {
+            BinOpError::Overflow(format!("Multiply expression '{a} * {b}' will overflow type U64"))
+        }),
+        BinOpKind::Div => a.checked_div(b).ok_or(BinOpError::DivByZero),
+        BinOpKind::Mod => a.checked_rem(b).ok_or(BinOpError::DivByZero),
+        BinOpKind::BitAnd => Ok(a & b),
+        BinOpKind::BitOr => Ok(a | b),
+        BinOpKind::Shl => check_shl_u64(a, b).map_err(BinOpError::Overflow),
+        BinOpKind::Shr => check_shr_u64(a, b).map_err(BinOpError::Overflow),
+    }
+}
+
+pub fn checked_binop_i64(op: BinOpKind, a: i64, b: i64) -> Result<i64, BinOpError> {
+    match op {
+        BinOpKind::Add => a.checked_add(b).ok_or_else(|| {
+            BinOpError::Overflow(format!("Add expression '{a} + {b}' will overflow type I64"))
+        }),
+        BinOpKind::Sub => a.checked_sub(b).ok_or_else(|| {
+            BinOpError::Overflow(format!("Subtract expression '{a} - {b}' will underflow type I64"))
+        }),
+        BinOpKind::Mul => a.checked_mul(b).ok_or_else(|| {
+            BinOpError::Overflow(format!("Multiply expression '{a} * {b}' will overflow type I64"))
+        }),
+        BinOpKind::Div => a.checked_div(b).ok_or(BinOpError::DivByZero),
+        BinOpKind::Mod => a.checked_rem(b).ok_or(BinOpError::DivByZero),
+        BinOpKind::BitAnd => Ok(a & b),
+        BinOpKind::BitOr => Ok(a | b),
+        BinOpKind::Shl => check_shl_i64(a, b).map_err(BinOpError::Overflow),
+        BinOpKind::Shr => check_shr_i64(a, b).map_err(BinOpError::Overflow),
+    }
+}
+
 #[derive(Debug)]
 pub struct IROperand {
     /// The linear ID of the IR instruction whose output this operand carries,

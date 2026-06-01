@@ -411,76 +411,41 @@ fn apply_comparison_op(
     Some(U64(if result { 1 } else { 0 }))
 }
 
-fn calc_u64_op(tok: LexToken, a: u64, b: u64) -> Result<u64, CalcErr> {
+fn token_to_binop(tok: LexToken) -> Result<ir::BinOpKind, ()> {
     match tok {
-        LexToken::Plus => a.checked_add(b).ok_or_else(|| {
-            CalcErr::Overflow(format!("Add expression '{a} + {b}' will overflow type U64"))
-        }),
-        LexToken::Minus => a.checked_sub(b).ok_or_else(|| {
-            CalcErr::Overflow(format!(
-                "Subtract expression '{a} - {b}' will underflow type U64"
-            ))
-        }),
-        LexToken::Asterisk => a.checked_mul(b).ok_or_else(|| {
-            CalcErr::Overflow(format!(
-                "Multiply expression '{a} * {b}' will overflow type U64"
-            ))
-        }),
-        LexToken::FSlash => a.checked_div(b).ok_or(CalcErr::DivByZero),
-        LexToken::Percent => {
-            if b == 0 {
-                Err(CalcErr::DivByZero)
-            } else {
-                Ok(a % b)
-            }
-        }
-        LexToken::Ampersand => Ok(a & b),
-        LexToken::Pipe => Ok(a | b),
-        LexToken::DoubleLess => ir::check_shl_u64(a, b).map_err(CalcErr::Overflow),
-        LexToken::DoubleGreater => ir::check_shr_u64(a, b).map_err(CalcErr::Overflow),
-        _ => Err(CalcErr::Overflow(
-            "Unknown operator in U64 const expression".to_string(),
-        )),
+        LexToken::Plus => Ok(ir::BinOpKind::Add),
+        LexToken::Minus => Ok(ir::BinOpKind::Sub),
+        LexToken::Asterisk => Ok(ir::BinOpKind::Mul),
+        LexToken::FSlash => Ok(ir::BinOpKind::Div),
+        LexToken::Percent => Ok(ir::BinOpKind::Mod),
+        LexToken::Ampersand => Ok(ir::BinOpKind::BitAnd),
+        LexToken::Pipe => Ok(ir::BinOpKind::BitOr),
+        LexToken::DoubleLess => Ok(ir::BinOpKind::Shl),
+        LexToken::DoubleGreater => Ok(ir::BinOpKind::Shr),
+        _ => Err(()),
     }
 }
 
+fn calc_u64_op(tok: LexToken, a: u64, b: u64) -> Result<u64, CalcErr> {
+    let op = match token_to_binop(tok) {
+        Ok(op) => op,
+        Err(_) => return Err(CalcErr::Overflow("Unknown operator in U64 const expression".to_string())),
+    };
+    ir::checked_binop_u64(op, a, b).map_err(|e| match e {
+        ir::BinOpError::Overflow(msg) => CalcErr::Overflow(msg),
+        ir::BinOpError::DivByZero => CalcErr::DivByZero,
+    })
+}
+
 fn calc_i64_op(tok: LexToken, a: i64, b: i64) -> Result<i64, CalcErr> {
-    match tok {
-        LexToken::Plus => a.checked_add(b).ok_or_else(|| {
-            CalcErr::Overflow(format!("Add expression '{a} + {b}' will overflow type I64"))
-        }),
-        LexToken::Minus => a.checked_sub(b).ok_or_else(|| {
-            CalcErr::Overflow(format!(
-                "Subtract expression '{a} - {b}' will underflow type I64"
-            ))
-        }),
-        LexToken::Asterisk => a.checked_mul(b).ok_or_else(|| {
-            CalcErr::Overflow(format!(
-                "Multiply expression '{a} * {b}' will overflow type I64"
-            ))
-        }),
-        LexToken::FSlash => {
-            if b == 0 {
-                Err(CalcErr::DivByZero)
-            } else {
-                Ok(a / b)
-            }
-        }
-        LexToken::Percent => {
-            if b == 0 {
-                Err(CalcErr::DivByZero)
-            } else {
-                Ok(a % b)
-            }
-        }
-        LexToken::Ampersand => Ok(a & b),
-        LexToken::Pipe => Ok(a | b),
-        LexToken::DoubleLess => ir::check_shl_i64(a, b).map_err(CalcErr::Overflow),
-        LexToken::DoubleGreater => ir::check_shr_i64(a, b).map_err(CalcErr::Overflow),
-        _ => Err(CalcErr::Overflow(
-            "Unknown operator in I64 const expression".to_string(),
-        )),
-    }
+    let op = match token_to_binop(tok) {
+        Ok(op) => op,
+        Err(_) => return Err(CalcErr::Overflow("Unknown operator in I64 const expression".to_string())),
+    };
+    ir::checked_binop_i64(op, a, b).map_err(|e| match e {
+        ir::BinOpError::Overflow(msg) => CalcErr::Overflow(msg),
+        ir::BinOpError::DivByZero => CalcErr::DivByZero,
+    })
 }
 
 // ── Region Evaluator ──────────────────────────────────────────────────────────

@@ -269,189 +269,15 @@ impl LayoutPhase {
     /// Returns the resulting string in xstr.
     /// If the diags noprint option is true, suppress printing.
     /// Returns None of failure
-    fn do_u64_add(ir: &IR, in0: u64, in1: u64, out: &mut u64, diags: &mut Diags) -> bool {
-        match in0.checked_add(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg = format!("Add expression '{in0} + {in1}' will overflow type U64");
-                diags.err1("ERR_125", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_i64_add(ir: &IR, in0: i64, in1: i64, out: &mut i64, diags: &mut Diags) -> bool {
-        match in0.checked_add(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg = format!("Add expression '{in0} + {in1}' will overflow type I64");
-                diags.err1("ERR_145", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_u64_sub(ir: &IR, in0: u64, in1: u64, out: &mut u64, diags: &mut Diags) -> bool {
-        match in0.checked_sub(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg = format!("Subtract expression '{in0} - {in1}' will underflow type U64");
-                diags.err1("ERR_128", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_i64_sub(ir: &IR, in0: i64, in1: i64, out: &mut i64, diags: &mut Diags) -> bool {
-        match in0.checked_sub(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg = format!("Subtract expression '{in0} - {in1}' will underflow type I64");
-                diags.err1("ERR_147", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_u64_mul(ir: &IR, in0: u64, in1: u64, out: &mut u64, diags: &mut Diags) -> bool {
-        match in0.checked_mul(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg = format!("Multiply expression '{in0} * {in1}' will overflow type U64");
-                diags.err1("ERR_130", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_i64_mul(ir: &IR, in0: i64, in1: i64, out: &mut i64, diags: &mut Diags) -> bool {
-        match in0.checked_mul(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg =
-                    format!("Multiply expression '{in0} * {in1}' will overflow data type I64");
-                diags.err1("ERR_148", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_u64_div(ir: &IR, in0: u64, in1: u64, out: &mut u64, diags: &mut Diags) -> bool {
-        match in0.checked_div(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg = format!("Exception in divide expression '{in0} / {in1}'");
-                diags.err1("ERR_131", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_u64_mod(ir: &IR, in0: u64, in1: u64, out: &mut u64, diags: &mut Diags) -> bool {
-        match in0.checked_rem(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg = format!("Exception in modulo expression '{in0} % {in1}'");
-                diags.err1("ERR_150", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_i64_div(ir: &IR, in0: i64, in1: i64, out: &mut i64, diags: &mut Diags) -> bool {
-        match in0.checked_div(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg = format!("Exception in divide expression '{in0} / {in1}'");
-                diags.err1("ERR_149", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_i64_mod(ir: &IR, in0: i64, in1: i64, out: &mut i64, diags: &mut Diags) -> bool {
-        match in0.checked_rem(in1) {
-            Some(v) => {
-                *out = v;
-                true
-            }
-            None if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            None => {
-                let msg = format!("Exception in modulo expression '{in0} % {in1}'");
-                diags.err1("ERR_152", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_u64_shl(ir: &IR, in0: u64, in1: u64, out: &mut u64, diags: &mut Diags) -> bool {
-        match ir::check_shl_u64(in0, in1) {
+    fn execute_binop_u64(
+        ir: &IR,
+        op: ir::BinOpKind,
+        in0: u64,
+        in1: u64,
+        out: &mut u64,
+        diags: &mut Diags,
+    ) -> bool {
+        match ir::checked_binop_u64(op, in0, in1) {
             Ok(v) => {
                 *out = v;
                 true
@@ -460,15 +286,40 @@ impl LayoutPhase {
                 *out = 0;
                 true
             }
-            Err(msg) => {
-                diags.err1("ERR_133", &msg, ir.src_loc.clone());
+            Err(e) => {
+                let code = match op {
+                    ir::BinOpKind::Add => "ERR_125",
+                    ir::BinOpKind::Sub => "ERR_128",
+                    ir::BinOpKind::Mul => "ERR_130",
+                    ir::BinOpKind::Div => "ERR_131",
+                    ir::BinOpKind::Mod => "ERR_150",
+                    ir::BinOpKind::Shl => "ERR_133",
+                    ir::BinOpKind::Shr => "ERR_134",
+                    _ => unreachable!(),
+                };
+                let msg = match e {
+                    ir::BinOpError::Overflow(msg) => msg,
+                    ir::BinOpError::DivByZero => match op {
+                        ir::BinOpKind::Div => format!("Exception in divide expression '{in0} / {in1}'"),
+                        ir::BinOpKind::Mod => format!("Exception in modulo expression '{in0} % {in1}'"),
+                        _ => unreachable!(),
+                    }
+                };
+                diags.err1(code, &msg, ir.src_loc.clone());
                 false
             }
         }
     }
 
-    fn do_i64_shl(ir: &IR, in0: i64, in1: i64, out: &mut i64, diags: &mut Diags) -> bool {
-        match ir::check_shl_i64(in0, in1) {
+    fn execute_binop_i64(
+        ir: &IR,
+        op: ir::BinOpKind,
+        in0: i64,
+        in1: i64,
+        out: &mut i64,
+        diags: &mut Diags,
+    ) -> bool {
+        match ir::checked_binop_i64(op, in0, in1) {
             Ok(v) => {
                 *out = v;
                 true
@@ -477,42 +328,26 @@ impl LayoutPhase {
                 *out = 0;
                 true
             }
-            Err(msg) => {
-                diags.err1("ERR_151", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_u64_shr(ir: &IR, in0: u64, in1: u64, out: &mut u64, diags: &mut Diags) -> bool {
-        match ir::check_shr_u64(in0, in1) {
-            Ok(v) => {
-                *out = v;
-                true
-            }
-            Err(_) if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            Err(msg) => {
-                diags.err1("ERR_134", &msg, ir.src_loc.clone());
-                false
-            }
-        }
-    }
-
-    fn do_i64_shr(ir: &IR, in0: i64, in1: i64, out: &mut i64, diags: &mut Diags) -> bool {
-        match ir::check_shr_i64(in0, in1) {
-            Ok(v) => {
-                *out = v;
-                true
-            }
-            Err(_) if diags.suppress_arith_err => {
-                *out = 0;
-                true
-            }
-            Err(msg) => {
-                diags.err1("ERR_144", &msg, ir.src_loc.clone());
+            Err(e) => {
+                let code = match op {
+                    ir::BinOpKind::Add => "ERR_145",
+                    ir::BinOpKind::Sub => "ERR_147",
+                    ir::BinOpKind::Mul => "ERR_148",
+                    ir::BinOpKind::Div => "ERR_149",
+                    ir::BinOpKind::Mod => "ERR_152",
+                    ir::BinOpKind::Shl => "ERR_151",
+                    ir::BinOpKind::Shr => "ERR_144",
+                    _ => unreachable!(),
+                };
+                let msg = match e {
+                    ir::BinOpError::Overflow(msg) => msg,
+                    ir::BinOpError::DivByZero => match op {
+                        ir::BinOpKind::Div => format!("Exception in divide expression '{in0} / {in1}'"),
+                        ir::BinOpKind::Mod => format!("Exception in modulo expression '{in0} % {in1}'"),
+                        _ => unreachable!(),
+                    }
+                };
+                diags.err1(code, &msg, ir.src_loc.clone());
                 false
             }
         }
@@ -658,25 +493,25 @@ impl LayoutPhase {
                 IRKind::BitOr => *out = in0 | in1,
                 IRKind::LogicalOr => *out = ((in0 != 0) || (in1 != 0)) as u64,
                 IRKind::Add => {
-                    result &= LayoutPhase::do_u64_add(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_u64(ir, ir::BinOpKind::Add, in0, in1, out, diags);
                 }
                 IRKind::Subtract => {
-                    result &= LayoutPhase::do_u64_sub(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_u64(ir, ir::BinOpKind::Sub, in0, in1, out, diags);
                 }
                 IRKind::Multiply => {
-                    result &= LayoutPhase::do_u64_mul(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_u64(ir, ir::BinOpKind::Mul, in0, in1, out, diags);
                 }
                 IRKind::Divide => {
-                    result &= LayoutPhase::do_u64_div(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_u64(ir, ir::BinOpKind::Div, in0, in1, out, diags);
                 }
                 IRKind::Modulo => {
-                    result &= LayoutPhase::do_u64_mod(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_u64(ir, ir::BinOpKind::Mod, in0, in1, out, diags);
                 }
                 IRKind::LeftShift => {
-                    result &= LayoutPhase::do_u64_shl(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_u64(ir, ir::BinOpKind::Shl, in0, in1, out, diags);
                 }
                 IRKind::RightShift => {
-                    result &= LayoutPhase::do_u64_shr(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_u64(ir, ir::BinOpKind::Shr, in0, in1, out, diags);
                 }
                 bad => panic!("Forgot to handle u64 {:?}", bad),
             };
@@ -735,31 +570,31 @@ impl LayoutPhase {
                 }
                 IRKind::Add => {
                     let out = out_parm.to_i64_mut();
-                    result &= LayoutPhase::do_i64_add(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_i64(ir, ir::BinOpKind::Add, in0, in1, out, diags);
                 }
                 IRKind::Subtract => {
                     let out = out_parm.to_i64_mut();
-                    result &= LayoutPhase::do_i64_sub(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_i64(ir, ir::BinOpKind::Sub, in0, in1, out, diags);
                 }
                 IRKind::Multiply => {
                     let out = out_parm.to_i64_mut();
-                    result &= LayoutPhase::do_i64_mul(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_i64(ir, ir::BinOpKind::Mul, in0, in1, out, diags);
                 }
                 IRKind::Divide => {
                     let out = out_parm.to_i64_mut();
-                    result &= LayoutPhase::do_i64_div(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_i64(ir, ir::BinOpKind::Div, in0, in1, out, diags);
                 }
                 IRKind::Modulo => {
                     let out = out_parm.to_i64_mut();
-                    result &= LayoutPhase::do_i64_mod(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_i64(ir, ir::BinOpKind::Mod, in0, in1, out, diags);
                 }
                 IRKind::LeftShift => {
                     let out = out_parm.to_i64_mut();
-                    result &= LayoutPhase::do_i64_shl(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_i64(ir, ir::BinOpKind::Shl, in0, in1, out, diags);
                 }
                 IRKind::RightShift => {
                     let out = out_parm.to_i64_mut();
-                    result &= LayoutPhase::do_i64_shr(ir, in0, in1, out, diags);
+                    result &= LayoutPhase::execute_binop_i64(ir, ir::BinOpKind::Shr, in0, in1, out, diags);
                 }
 
                 bad => panic!("Forgot to handle i64 {:?}", bad),
