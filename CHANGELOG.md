@@ -14,6 +14,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - FIXED: Unify out-of-range shift behavior between const and layout phases
 - FIXED: Fixed double-backslash string escapes
 - INTERNAL: Added unit tests for mach-o, Windows PE and WASM object formats
+- INTERNAL: Added paranoid bounds checking on extension slice
 - README: Added region example to basic structure section.
 
 ## [0.8.0]

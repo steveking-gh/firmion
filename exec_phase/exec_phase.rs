@@ -566,11 +566,22 @@ impl ExecPhase {
                     };
                     let d = &map_db.sections[di];
                     let start = d.file_offset as usize;
+                    let end = start + d.size as usize;
+                    if end > output.len() || start > end {
+                        return Err(anyhow!(
+                            "Extension '{}' slice read for parameter '{}' (range {:#x}..{:#x}) exceeds buffer bounds (length {}). This is a severe compiler bug.",
+                            name,
+                            p.name,
+                            start,
+                            end,
+                            output.len()
+                        ));
+                    }
                     resolved_sections.push(Some((
                         d.file_offset,
                         d.size,
                         start,
-                        start + d.size as usize,
+                        end,
                     )));
                 } else {
                     resolved_sections.push(None);
