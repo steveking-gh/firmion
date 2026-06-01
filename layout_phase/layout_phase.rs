@@ -451,19 +451,16 @@ impl LayoutPhase {
     }
 
     fn do_u64_shl(ir: &IR, in0: u64, in1: u64, out: &mut u64, diags: &mut Diags) -> bool {
-        match u32::try_from(in1) {
-            Ok(shift_amount) => {
-                *out = in0.checked_shl(shift_amount).unwrap_or(0);
+        match ir::check_shl_u64(in0, in1) {
+            Ok(v) => {
+                *out = v;
                 true
             }
             Err(_) if diags.suppress_arith_err => {
                 *out = 0;
                 true
             }
-            Err(_) => {
-                let msg = format!(
-                    "Shift amount {in1} is too large in Left Shift expression '{in0} << {in1}'"
-                );
+            Err(msg) => {
                 diags.err1("ERR_133", &msg, ir.src_loc.clone());
                 false
             }
@@ -471,19 +468,16 @@ impl LayoutPhase {
     }
 
     fn do_i64_shl(ir: &IR, in0: i64, in1: i64, out: &mut i64, diags: &mut Diags) -> bool {
-        match u32::try_from(in1) {
-            Ok(shift_amount) => {
-                *out = in0.checked_shl(shift_amount).unwrap_or(0);
+        match ir::check_shl_i64(in0, in1) {
+            Ok(v) => {
+                *out = v;
                 true
             }
             Err(_) if diags.suppress_arith_err => {
                 *out = 0;
                 true
             }
-            Err(_) => {
-                let msg = format!(
-                    "Shift amount {in1} is too large in Left Shift expression '{in0} << {in1}'"
-                );
+            Err(msg) => {
                 diags.err1("ERR_151", &msg, ir.src_loc.clone());
                 false
             }
@@ -491,19 +485,16 @@ impl LayoutPhase {
     }
 
     fn do_u64_shr(ir: &IR, in0: u64, in1: u64, out: &mut u64, diags: &mut Diags) -> bool {
-        match u32::try_from(in1) {
-            Ok(shift_amount) => {
-                *out = in0.checked_shr(shift_amount).unwrap_or(0);
+        match ir::check_shr_u64(in0, in1) {
+            Ok(v) => {
+                *out = v;
                 true
             }
             Err(_) if diags.suppress_arith_err => {
                 *out = 0;
                 true
             }
-            Err(_) => {
-                let msg = format!(
-                    "Shift amount {in1} is too large in Right Shift expression '{in0} >> {in1}'"
-                );
+            Err(msg) => {
                 diags.err1("ERR_134", &msg, ir.src_loc.clone());
                 false
             }
@@ -511,19 +502,16 @@ impl LayoutPhase {
     }
 
     fn do_i64_shr(ir: &IR, in0: i64, in1: i64, out: &mut i64, diags: &mut Diags) -> bool {
-        match u32::try_from(in1) {
-            Ok(shift_amount) => {
-                *out = in0.checked_shr(shift_amount).unwrap_or(0);
+        match ir::check_shr_i64(in0, in1) {
+            Ok(v) => {
+                *out = v;
                 true
             }
             Err(_) if diags.suppress_arith_err => {
                 *out = 0;
                 true
             }
-            Err(_) => {
-                let msg = format!(
-                    "Shift amount {in1} is too large in Right Shift expression '{in0} >> {in1}'"
-                );
+            Err(msg) => {
                 diags.err1("ERR_144", &msg, ir.src_loc.clone());
                 false
             }

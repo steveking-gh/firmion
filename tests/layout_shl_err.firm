@@ -1,0 +1,8 @@
+section foo {
+    wr32 0;
+}
+section bar {
+    wr foo;
+    assert 1 << (sizeof(foo) * 16) == 0;
+}
+output bar;

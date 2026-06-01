@@ -436,8 +436,8 @@ fn calc_u64_op(tok: LexToken, a: u64, b: u64) -> Result<u64, CalcErr> {
         }
         LexToken::Ampersand => Ok(a & b),
         LexToken::Pipe => Ok(a | b),
-        LexToken::DoubleLess => Ok(a << (b & 63)),
-        LexToken::DoubleGreater => Ok(a >> (b & 63)),
+        LexToken::DoubleLess => ir::check_shl_u64(a, b).map_err(CalcErr::Overflow),
+        LexToken::DoubleGreater => ir::check_shr_u64(a, b).map_err(CalcErr::Overflow),
         _ => Err(CalcErr::Overflow(
             "Unknown operator in U64 const expression".to_string(),
         )),
@@ -475,8 +475,8 @@ fn calc_i64_op(tok: LexToken, a: i64, b: i64) -> Result<i64, CalcErr> {
         }
         LexToken::Ampersand => Ok(a & b),
         LexToken::Pipe => Ok(a | b),
-        LexToken::DoubleLess => Ok(a << (b & 63)),
-        LexToken::DoubleGreater => Ok(a >> (b & 63)),
+        LexToken::DoubleLess => ir::check_shl_i64(a, b).map_err(CalcErr::Overflow),
+        LexToken::DoubleGreater => ir::check_shr_i64(a, b).map_err(CalcErr::Overflow),
         _ => Err(CalcErr::Overflow(
             "Unknown operator in I64 const expression".to_string(),
         )),

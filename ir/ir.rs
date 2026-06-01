@@ -413,6 +413,34 @@ pub fn unescape_string(s: &str) -> String {
     result
 }
 
+pub fn check_shl_u64(in0: u64, in1: u64) -> Result<u64, String> {
+    if in1 >= 64 {
+        return Err(format!("Left shift amount {in1} is out of range [0, 63] in '{in0} << {in1}'"));
+    }
+    Ok(in0 << in1)
+}
+
+pub fn check_shr_u64(in0: u64, in1: u64) -> Result<u64, String> {
+    if in1 >= 64 {
+        return Err(format!("Right shift amount {in1} is out of range [0, 63] in '{in0} >> {in1}'"));
+    }
+    Ok(in0 >> in1)
+}
+
+pub fn check_shl_i64(in0: i64, in1: i64) -> Result<i64, String> {
+    if in1 < 0 || in1 >= 64 {
+        return Err(format!("Left shift amount {in1} is out of range [0, 63] in '{in0} << {in1}'"));
+    }
+    Ok(in0 << in1)
+}
+
+pub fn check_shr_i64(in0: i64, in1: i64) -> Result<i64, String> {
+    if in1 < 0 || in1 >= 64 {
+        return Err(format!("Right shift amount {in1} is out of range [0, 63] in '{in0} >> {in1}'"));
+    }
+    Ok(in0 >> in1)
+}
+
 #[derive(Debug)]
 pub struct IROperand {
     /// The linear ID of the IR instruction whose output this operand carries,
@@ -671,5 +699,44 @@ mod tests {
         use super::unescape_string;
         // Path on Windows "C:\Users" -> unrecognized \U should be kept as literal backslash + U
         assert_eq!(unescape_string("C:\\Users"), "C:\\Users");
+    }
+
+    #[test]
+    fn test_check_shl_u64() {
+        use super::check_shl_u64;
+        assert_eq!(check_shl_u64(1, 0), Ok(1));
+        assert_eq!(check_shl_u64(1, 5), Ok(32));
+        assert_eq!(check_shl_u64(1, 63), Ok(1u64 << 63));
+        assert!(check_shl_u64(1, 64).is_err());
+        assert!(check_shl_u64(1, 100).is_err());
+    }
+
+    #[test]
+    fn test_check_shr_u64() {
+        use super::check_shr_u64;
+        assert_eq!(check_shr_u64(32, 0), Ok(32));
+        assert_eq!(check_shr_u64(32, 5), Ok(1));
+        assert_eq!(check_shr_u64(1u64 << 63, 63), Ok(1));
+        assert!(check_shr_u64(32, 64).is_err());
+    }
+
+    #[test]
+    fn test_check_shl_i64() {
+        use super::check_shl_i64;
+        assert_eq!(check_shl_i64(1, 0), Ok(1));
+        assert_eq!(check_shl_i64(1, 5), Ok(32));
+        assert_eq!(check_shl_i64(-1, 5), Ok(-32));
+        assert!(check_shl_i64(1, -1).is_err());
+        assert!(check_shl_i64(1, 64).is_err());
+    }
+
+    #[test]
+    fn test_check_shr_i64() {
+        use super::check_shr_i64;
+        assert_eq!(check_shr_i64(32, 0), Ok(32));
+        assert_eq!(check_shr_i64(32, 5), Ok(1));
+        assert_eq!(check_shr_i64(-32, 5), Ok(-1));
+        assert!(check_shr_i64(32, -1).is_err());
+        assert!(check_shr_i64(32, 64).is_err());
     }
 }

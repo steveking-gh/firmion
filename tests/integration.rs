@@ -3931,4 +3931,14 @@ mod tests {
         fs::remove_file(out_const).ok();
         fs::remove_file(out_imm).ok();
     }
+
+    #[test]
+    fn const_shl_err() {
+        assert_firmion_failure("tests/const_shl_err.firm", &["[ERR_93]"]);
+    }
+
+    #[test]
+    fn layout_shl_err() {
+        assert_firmion_failure("tests/layout_shl_err.firm", &["[ERR_133]"]);
+    }
 } // mod tests

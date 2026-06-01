@@ -1,0 +1,5 @@
+const S = 1 << 64;
+section foo {
+    wr8 0;
+}
+output foo;
