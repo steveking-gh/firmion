@@ -69,13 +69,13 @@ If you already have the Rust development tools installed, just install using
 
 ## Install Prebuilt Binaries for Linux
 
-    curl --proto '=https' --tlsv1.2 -LsSf https://github.com/steveking-gh/firmion/releases/download/0.7.0/firmion-installer.sh | sh
+    curl --proto '=https' --tlsv1.2 -LsSf https://github.com/steveking-gh/firmion/releases/download/0.8.0/firmion-installer.sh | sh
 
 ## Install Prebuilt Binaries for Windows
 
 Start a command prompt and execute the following:
 
-    powershell -ExecutionPolicy Bypass -c "irm https://github.com/steveking-gh/firmion/releases/download/0.7.0/firmion-installer.ps1 | iex"
+    powershell -ExecutionPolicy Bypass -c "irm https://github.com/steveking-gh/firmion/releases/download/0.8.0/firmion-installer.ps1 | iex"
 
 ## Build From Source
 
