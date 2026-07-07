@@ -3009,41 +3009,41 @@ To update the coverage table in this README from Windows, run
 
 <!-- COVERAGE_START -->
 ```text
-Filename                                            Regions    Missed Regions     Cover   Functions  Missed Functions  Executed       Lines      Missed Lines     Cover    Branches   Missed Branches     Cover
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-ast/ast.rs                                             2452               519    78.83%          69                10    85.51%        1360               237    82.57%           0                 0         -
-ast/lexer.rs                                            439                13    97.04%          16                 0   100.00%         268                10    96.27%           0                 0         -
-astdb/astdb.rs                                          761               115    84.89%          12                 0   100.00%         374                37    90.11%           0                 0         -
-const_eval/const_eval.rs                               1079               162    84.99%          40                 5    87.50%         640               124    80.62%           0                 0         -
-depth_guard/depth_guard.rs                              146                 0   100.00%          17                 0   100.00%          77                 0   100.00%           0                 0         -
-diags/diags.rs                                          282                28    90.07%          14                 1    92.86%         150                21    86.00%           0                 0         -
-exec_phase/exec_phase.rs                                635               105    83.46%          16                 2    87.50%         423                51    87.94%           0                 0         -
-extension_registry/extension_registry.rs                258                 9    96.51%          18                 3    83.33%         126                 9    92.86%           0                 0         -
-extension_registry/test_mocks.rs                        274                34    87.59%          41                 6    85.37%         215                33    84.65%           0                 0         -
-extensions/src/lib.rs                                    12                 0   100.00%           1                 0   100.00%           7                 0   100.00%           0                 0         -
-extensions/std/crc32c/src/crc32c.rs                      31                 2    93.55%           5                 0   100.00%          26                 3    88.46%           0                 0         -
-extensions/std/esp_checksum/src/esp_checksum.rs          66                 9    86.36%           6                 1    83.33%          66                16    75.76%           0                 0         -
-extensions/std/md5/src/md5.rs                            31                 2    93.55%           5                 0   100.00%          26                 3    88.46%           0                 0         -
-extensions/std/sha256/src/sha256.rs                      31                 2    93.55%           5                 0   100.00%          26                 3    88.46%           0                 0         -
-extensions/std/xor/src/xor.rs                            31                 2    93.55%           6                 0   100.00%          26                 3    88.46%           0                 0         -
-firmion_extension/lib.rs                                  3                 0   100.00%           1                 0   100.00%           3                 0   100.00%           0                 0         -
-ir/ir.rs                                                316                31    90.19%          31                 1    96.77%         236                22    90.68%           0                 0         -
-irdb/irdb.rs                                            794               100    87.41%          20                 2    90.00%         464                72    84.48%           0                 0         -
-ireval/ireval.rs                                         85                 0   100.00%           4                 0   100.00%          58                 0   100.00%           0                 0         -
-layout_phase/layout_phase.rs                           1701               359    78.89%          48                 2    95.83%        1088               201    81.53%           0                 0         -
-layoutdb/layoutdb.rs                                    826               169    79.54%          19                 0   100.00%         501                78    84.43%           0                 0         -
-linearizer/linearizer.rs                                838                64    92.36%          23                 1    95.65%         506                51    89.92%           0                 0         -
-locationdb/locationdb.rs                                 39                 4    89.74%           3                 1    66.67%          28                 4    85.71%           0                 0         -
-map_phase/map_phase.rs                                  893                14    98.43%          57                 0   100.00%         613                 9    98.53%           0                 0         -
-objfile/objfile.rs                                      195                16    91.79%           5                 0   100.00%         116                 7    93.97%           0                 0         -
-output_buffer/output_buffer.rs                           55                 8    85.45%          10                 2    80.00%          33                 6    81.82%           0                 0         -
-process/process.rs                                      446                24    94.62%          28                 5    82.14%         252                 9    96.43%           0                 0         -
-regiondb/regiondb.rs                                    127                 5    96.06%           3                 0   100.00%         107                 5    95.33%           0                 0         -
-src/main.rs                                             164                14    91.46%          11                 3    72.73%         108                10    90.74%           0                 0         -
-symtable/symtable.rs                                    107                 5    95.33%          14                 2    85.71%          78                 5    93.59%           0                 0         -
-validation_phase/validation_phase.rs                     39                 2    94.87%           1                 0   100.00%          24                 0   100.00%           0                 0         -
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-TOTAL                                                 13156              1817    86.19%         549                47    91.44%        8025              1029    87.18%           0                 0         -
+Filename                                    Regions    Missed Regions     Cover   Functions  Missed Functions  Executed       Lines      Missed Lines     Cover    Branches   Missed Branches     Cover
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ast/ast.rs                                     2471               520    78.96%          69                10    85.51%        1373               240    82.52%           0                 0         -
+ast/astdb.rs                                    761               115    84.89%          12                 0   100.00%         374                37    90.11%           0                 0         -
+ast/lexer.rs                                    439                13    97.04%          16                 0   100.00%         268                10    96.27%           0                 0         -
+const_eval/const_eval.rs                       1131               128    88.68%          40                 0   100.00%         665                88    86.77%           0                 0         -
+const_eval/ireval.rs                             85                 0   100.00%           4                 0   100.00%          58                 0   100.00%           0                 0         -
+const_eval/linearizer.rs                        838                64    92.36%          23                 1    95.65%         506                51    89.92%           0                 0         -
+diags/depth_guard.rs                            146                 0   100.00%          17                 0   100.00%          77                 0   100.00%           0                 0         -
+diags/diags.rs                                  282                28    90.07%          14                 1    92.86%         150                21    86.00%           0                 0         -
+exec_phase/exec_phase.rs                        653               107    83.61%          15                 2    86.67%         445                59    86.74%           0                 0         -
+exec_phase/output_buffer.rs                      55                 8    85.45%          10                 2    80.00%          33                 6    81.82%           0                 0         -
+exec_phase/validation_phase.rs                   39                 2    94.87%           1                 0   100.00%          24                 0   100.00%           0                 0         -
+extensions/src/crc32c.rs                         31                 2    93.55%           5                 0   100.00%          26                 3    88.46%           0                 0         -
+extensions/src/esp_checksum.rs                  160                 8    95.00%          10                 1    90.00%         114                11    90.35%           0                 0         -
+extensions/src/lib.rs                            12                 0   100.00%           1                 0   100.00%           7                 0   100.00%           0                 0         -
+extensions/src/md5.rs                            31                 2    93.55%           5                 0   100.00%          26                 3    88.46%           0                 0         -
+extensions/src/sha256.rs                         31                 2    93.55%           5                 0   100.00%          26                 3    88.46%           0                 0         -
+extensions/src/xor.rs                            31                 2    93.55%           6                 0   100.00%          26                 3    88.46%           0                 0         -
+firmion_extension/extension_registry.rs         258                 9    96.51%          18                 3    83.33%         126                 9    92.86%           0                 0         -
+firmion_extension/lib.rs                          3                 0   100.00%           1                 0   100.00%           3                 0   100.00%           0                 0         -
+firmion_extension/test_mocks.rs                 274                34    87.59%          41                 6    85.37%         215                33    84.65%           0                 0         -
+ir/ir.rs                                        567                42    92.59%          52                 3    94.23%         388                34    91.24%           0                 0         -
+ir/symtable.rs                                  107                 5    95.33%          14                 2    85.71%          78                 5    93.59%           0                 0         -
+irdb/irdb.rs                                    889               117    86.84%          24                 3    87.50%         529                80    84.88%           0                 0         -
+irdb/layoutdb.rs                                825               169    79.52%          19                 0   100.00%         500                78    84.40%           0                 0         -
+irdb/objfile.rs                                 434                63    85.48%          22                 6    72.73%         223                27    87.89%           0                 0         -
+irdb/regiondb.rs                                127                 5    96.06%           3                 0   100.00%         107                 5    95.33%           0                 0         -
+layout_phase/layout_phase.rs                   1511               256    83.06%          36                 2    94.44%         990               158    84.04%           0                 0         -
+layout_phase/locationdb.rs                       39                 4    89.74%           3                 1    66.67%          28                 4    85.71%           0                 0         -
+process/map_phase.rs                            893                14    98.43%          57                 0   100.00%         613                 9    98.53%           0                 0         -
+process/process.rs                              446                24    94.62%          28                 5    82.14%         252                 9    96.43%           0                 0         -
+src/main.rs                                     164                14    91.46%          11                 3    72.73%         108                10    90.74%           0                 0         -
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+TOTAL                                         13733              1757    87.21%         582                51    91.24%        8358               996    88.08%           0                 0         -
 ```
 <!-- COVERAGE_END -->
 
