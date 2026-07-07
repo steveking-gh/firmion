@@ -1,0 +1,14 @@
+.claude/CLAUDE.md
+  h_5b3f31968f5853 27-44,81-82,130-131,151-152,155-158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "9fd537f6fed03910abf7cd8858a0b4ec9022e667",
+  "prompts": {},
+  "humans": {
+    "h_5b3f31968f5853": {
+      "author": "Steve King <12994437+steveking-gh@users.noreply.github.com>"
+    }
+  }
+}
